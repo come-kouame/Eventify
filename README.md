@@ -1,5 +1,15 @@
 # mif10 g16 2025-2026 Eventify
 
-Lien du sujet : https://forge.univ-lyon1.fr/m1if10/2025 
-Lien du groupe de discussion : https://chat.info.univ-lyon1.fr/mif10-2025/channels/g16
-Lien du wiki : https://forge.univ-lyon1.fr/mif10-g16-2025-2026/mif10-g16-2025-2026-eventify/-/wikis/home
+Lien du sujet : https://forge.univ-lyon1.fr/m1if10/2025  
+Lien du groupe de discussion : https://chat.info.univ-lyon1.fr/mif10-2025/channels/g16  
+Lien du wiki : https://forge.univ-lyon1.fr/mif10-g16-2025-2026/mif10-g16-2025-2026-eventify/-/wikis/home  
+
+On travaille sur différentes branches :  
+La branche main qu'on ne touchera pas la plupart du temps.  
+Une branche dev qui va servir pour créer les branches pour chaque tâche.  
+À chaque ajout / modification, on crée une nouvelle branche à partir de la branche dev, qu'on merge à celle-ci une 
+fois que le travail a été reviewé et approuvé.  
+On mergera la branche dev à la branche main quand on aura une version dev suffisamment "propre" (à voir en réunion).
+
+Regarder [Issue boards](https://forge.univ-lyon1.fr/mif10-g16-2025-2026/mif10-g16-2025-2026-eventify/-/boards) pour voir
+les tâches à faire.
