@@ -1,6 +1,6 @@
 spring.datasource.url=jdbc:postgresql://localhost:5432/eventify_db
-spring.datasource.username=postgres
-spring.datasource.password=motdepasse
+spring.datasource.username=eventify_user
+spring.datasource.password=password
 
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
