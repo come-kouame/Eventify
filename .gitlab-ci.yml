@@ -6,4 +6,11 @@ deploy:
   only:
     - main
   before_script:
+    - chmod +x ci/setup-mvn-proxy.sh
+    - ./ci/setup-mvn-proxy.sh
+    - chmod 400 $CI_SSH_KEY
+    - apk add openssh-client
   script:
+    - cd eventify-api || (echo "Le dossier eventify-api n'existe pas." && exit 1)
+    - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY ./target/*.war gitlabci@192.168.75.28:/opt/tomcat/webapps/api.war
+    - cd ..
