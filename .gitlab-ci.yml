@@ -1,5 +1,15 @@
 stages:
+  - test
   - deploy
+
+sonarqube:
+  stage: test
+  image: sonarsource/sonar-scanner-cli
+  script:
+    - sonar-scanner -Dsonar.host.url=https://sonar.info.univ-lyon1.fr -Dsonar.token=$SONAR_TOKEN
+  only:
+    - dev
+    - main
 
 deploy:
   stage: deploy
