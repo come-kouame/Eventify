@@ -21,5 +21,6 @@ deploy:
     - apk add openssh-client
   script:
     - cd eventify-api || (echo "Le dossier eventify-api n'existe pas." && exit 1)
+    - mvn clean package
     - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY ./target/*.war gitlabci@192.168.75.28:/opt/tomcat/webapps/api.war
     - cd ..
