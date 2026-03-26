@@ -22,12 +22,9 @@ export default function FormInscription() {
     };
 
     return (
-        <div className="flex items-center justify-center px-6 py-8 mx-auto min-h-screen">
+        <div className="flex items-center justify-center px-6 mx-auto">
             <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-3xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-                <div className="p-6 space-y-6 sm:p-8">
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                        Inscrivez-vous
-                    </h1>
+                <div className="sm:p-8">
 
                     <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
 

@@ -2,11 +2,8 @@
 
 export function FormConnexion() {
     return (
-        <div className="flex items-center justify-center px-6 py-8 mx-auto w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-2xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+        <div className="flex items-center justify-center px-6 mx-auto w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-2xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div className="p-6 space-y-6 sm:p-8 w-full">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white text-center">
-                    Connectez-vous
-                </h1>
                 <form className="space-y-4 md:space-y-6" action="#">
                     {/* Email et Mot de passe sur la même ligne */}
                     <div className="flex gap-4">
