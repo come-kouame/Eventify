@@ -1,7 +1,13 @@
-spring.datasource.url=jdbc:postgresql://localhost:5432/eventify_db
-spring.datasource.username=eventify_user
-spring.datasource.password=password
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/eventify_db
+    username: eventify_user
+    password: password
 
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
