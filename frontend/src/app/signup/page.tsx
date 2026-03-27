@@ -10,11 +10,11 @@ import {EventPresentation} from "@/ui/event/event-presentation";
 
 export default function Home() {
     return (
-        <div className=" justify-center bg-zinc-50 font-sans dark:bg-black">
+        <div className=" justify-center bg-zinc-50 font-sans">
             <NavBarNotConnected/>
 
             <h1 className="font-medium text-black text-6xl text-center w-full py-10">Inscrivez-Vous</h1>
-            <main className="flex min-h-screen w-full gap-8 px-16  dark:bg-black sm:items-start">
+            <main className="flex min-h-screen w-full gap-8 px-16 sm:items-start">
                 <FormInscription/>
             </main>
         </div>
