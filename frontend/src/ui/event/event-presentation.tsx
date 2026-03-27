@@ -66,9 +66,9 @@ export const EventPresentation = ({
                     <div className="w-1/3 bg-gray-400 py-3">
                         {place_current} places restantes
                     </div>
-                    <div className="w-1/3 bg-gray-300 py-3 cursor-pointer hover:bg-gray-500 hover:text-white transition">
+                    <a href="/event/x" className="w-1/3 bg-gray-300 py-3 cursor-pointer hover:bg-gray-500 hover:text-white transition block">
                         Réserver
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
