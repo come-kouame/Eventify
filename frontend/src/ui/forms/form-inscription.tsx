@@ -23,7 +23,7 @@ export default function FormInscription() {
 
     return (
         <div className="flex items-center justify-center px-6 mx-auto">
-            <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-3xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+            <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-3xl xl:p-0">
                 <div className="sm:p-8">
 
                     <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
@@ -31,30 +31,30 @@ export default function FormInscription() {
                         {/* Nom + Prénom */}
                         <div>
                             <label className="block mb-2 text-sm font-medium">Nom</label>
-                            <input type="text" name="nom" className="input" placeholder="Nom" required />
+                            <input type="text" name="nom" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3" placeholder="Nom" required />
                         </div>
 
                         <div>
                             <label className="block mb-2 text-sm font-medium">Prénom</label>
-                            <input type="text" name="prenom" className="input" placeholder="Prénom" required />
+                            <input type="text" name="prenom" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3" placeholder="Prénom" required />
                         </div>
 
                         {/* Date naissance (full width) */}
                         <div className="col-span-2">
                             <label className="block mb-2 text-sm font-medium">Date de naissance</label>
-                            <input type="date" name="date" className="input" required />
+                            <input type="date" name="date" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3" required />
                         </div>
 
                         {/* Rue */}
                         <div className="col-span-2">
                             <label className="block mb-2 text-sm font-medium">Rue</label>
-                            <input type="text" name="rue" className="input" placeholder="Nom de la rue" required />
+                            <input type="text" name="rue" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3" placeholder="Nom de la rue" required />
                         </div>
 
                         {/* Ville + CP */}
                         <div>
                             <label className="block mb-2 text-sm font-medium">Ville</label>
-                            <input type="text" name="ville" className="input" placeholder="Paris, Lyon..." required />
+                            <input type="text" name="ville" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3" placeholder="Paris, Lyon..." required />
                         </div>
 
                         <div>
@@ -69,7 +69,7 @@ export default function FormInscription() {
                                         .replace(/\D/g, "")
                                         .slice(0, 5);
                                 }}
-                                className="input"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                                 placeholder="69000"
                                 required
                             />
@@ -78,12 +78,12 @@ export default function FormInscription() {
                         {/* Email + Login */}
                         <div>
                             <label className="block mb-2 text-sm font-medium">Email</label>
-                            <input type="email" name="email" className="input" placeholder="nom@email.fr" required />
+                            <input type="email" name="email" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3" placeholder="nom@email.fr" required />
                         </div>
 
                         <div>
                             <label className="block mb-2 text-sm font-medium">Login</label>
-                            <input type="text" name="login" className="input" required />
+                            <input type="text" name="login" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3" required />
                         </div>
 
                         {/* Password + Confirmation */}
@@ -91,7 +91,7 @@ export default function FormInscription() {
                             <label className="block mb-2 text-sm font-medium">Mot de passe</label>
                             <input
                                 type="password"
-                                className="input"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
@@ -102,7 +102,7 @@ export default function FormInscription() {
                             <label className="block mb-2 text-sm font-medium">Confirmer le mot de passe</label>
                             <input
                                 type="password"
-                                className="input"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                                 value={confirm}
                                 onChange={(e) => setConfirm(e.target.value)}
                                 required
@@ -128,7 +128,7 @@ export default function FormInscription() {
                         {/* Login link */}
                         <p className="col-span-2 text-sm text-gray-500">
                             Déjà un compte ?
-                            <a href="#" className="text-primary-600 hover:underline ml-1">
+                            <a href="/login" className="text-primary-600 hover:underline ml-1">
                                 Se connecter
                             </a>
                         </p>
