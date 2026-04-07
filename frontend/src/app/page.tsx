@@ -4,6 +4,7 @@ import {NavBarOrga} from "@/ui/nav-bar/nav-bar-orga";
 import {NavBarAdmin} from "@/ui/nav-bar/nav-bar-admin";
 import {Calendar} from "@/ui/calendar/calendar";
 import {EventPresentation} from "@/ui/event/event-presentation";
+import {Hello} from "@/ui/message/hello";
 
 export default function Home() {
     return (
@@ -32,6 +33,9 @@ export default function Home() {
                     />
                 </div>
             </main>
+            <Hello/>
+
+
         </div>
     );
 }
