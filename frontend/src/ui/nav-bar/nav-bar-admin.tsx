@@ -9,12 +9,12 @@ export const NavBarAdmin = () => {
                 </a>
 
                 <div className="flex text-xl space-x-4">
-                    <a>Créer un évènement</a>
-                    <a>Gérer les évènements</a>
-                    <a>Gérer les comptes</a>
-                    <a>Mes évènements</a>
-                    <a>Mon Compte</a>
-                    <a>Déconnexion</a>
+                    <a href="/event/create">Créer un évènement</a>
+                    <a href="/event">Gérer les évènements</a>
+                    <a href="/profiles">Gérer les comptes</a>
+                    <a href="/event">Mes évènements</a>
+                    <a href="/profiles/x">Mon Compte</a>
+                    <a href="">Déconnexion</a>
                 </div>
             </div>
             <div className="h-[1px] bg-black"></div>

@@ -9,9 +9,9 @@ export const NavBarUser = () => {
                 </a>
 
                 <div className="flex text-xl space-x-4">
-                    <a>Mes évènements</a>
-                    <a>Mon Compte</a>
-                    <a>Déconnexion</a>
+                    <a href="/event">Mes évènements</a>
+                    <a href="/profiles/x">Mon Compte</a>
+                    <a href="">Déconnexion</a>
                 </div>
             </div>
             <div className="h-[1px] bg-black"></div>
