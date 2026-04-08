@@ -1,40 +1,40 @@
 import {NavBarNotConnected} from "@/ui/nav-bar/nav-bar-not-connected";
 
+
 export default function Home() {
     return (
-        <div className="min-h-screen font-sans">
-            {/* Header */}
+        <div className="min-h-screen bg-zinc-100 font-sans">
             <NavBarNotConnected/>
 
             {/* Title */}
-            <h1 className="text-center text-5xl font-medium my-8">
+            <h1 className="text-5xl text-center py-10">
                 Gestion des comptes
             </h1>
 
-            <div className="flex px-6 gap-6">
+            <div className="flex px-10 gap-6">
                 {/* Sidebar */}
-                <div className="w-1/4 flex flex-col gap-6">
-                    <button className="bg-gray-300 text-xl py-4">
-                        Créer un Compte
-                    </button>
+                <div className="w-1/4 flex flex-col gap-6 rounded-lg">
+                    <a href="/profiles/create" className="py-4 text-xl rounded-lg bg-indigo-300 text-center">
+                        Créer un compte
+                    </a>
 
-                    <div className="bg-gray-300 p-6">
-                        <h2 className="text-4xl mb-4">Filtres</h2>
-                        <div className="text-xl space-y-2">
+                    <div className="bg-zinc-300 p-6 flex flex-col gap-4 rounded-lg">
+                        <h2 className="text-3xl text-center">Filtres</h2>
+                        <div className="text-lg flex flex-col gap-3">
                             <label className="flex items-center gap-2">
-                                <input type="checkbox" className="w-5 h-5" />
+                                <input type="checkbox"/>
                                 Administrateur
                             </label>
                             <label className="flex items-center gap-2">
-                                <input type="checkbox" className="w-5 h-5" />
+                                <input type="checkbox"/>
                                 Organisateur
                             </label>
                             <label className="flex items-center gap-2">
-                                <input type="checkbox" className="w-5 h-5" />
+                                <input type="checkbox"/>
                                 Participant
                             </label>
                             <label className="flex items-center gap-2">
-                                <input type="checkbox" className="w-5 h-5" />
+                                <input type="checkbox"/>
                                 Supprimé
                             </label>
                         </div>
@@ -42,7 +42,7 @@ export default function Home() {
                 </div>
 
                 {/* Table */}
-                <div className="flex-1 bg-gray-300 p-4">
+                <div className="flex-1 bg-zinc-300 flex flex-col gap-4 p-6 rounded-lg">
                     <table className="w-full border-collapse">
                         <thead>
                             <tr className="bg-gray-400 text-left">

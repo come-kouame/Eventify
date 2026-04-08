@@ -28,7 +28,7 @@ export const EventPresentation = ({
     }
 
     return (
-        <div className="flex w-full max-w-5xl bg-gray-200 rounded-lg overflow-hidden shadow">
+        <div className="flex w-full bg-gray-200 rounded-lg overflow-hidden shadow">
             {/* Image */}
             <div className="w-1/6 bg-gray-300 flex items-center justify-center">
                 <div className="w-full aspect-[210/297] overflow-hidden">

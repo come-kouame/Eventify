@@ -128,7 +128,7 @@ export default function FormInscription() {
                         {/* Login link */}
                         <p className="col-span-2 text-sm text-gray-500">
                             Déjà un compte ?
-                            <a href="/login" className="text-primary-600 hover:underline ml-1">
+                            <a href="/login" className="font-medium text-blue-600 hover:underline ml-1">
                                 Se connecter
                             </a>
                         </p>
