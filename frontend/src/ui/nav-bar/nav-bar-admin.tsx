@@ -17,7 +17,7 @@ export const NavBarAdmin = () => {
                     <a>Déconnexion</a>
                 </div>
             </div>
-            <div className="h-[2px] bg-black"></div>
+            <div className="h-[1px] bg-black"></div>
         </>
     );
 };
