@@ -1,9 +1,9 @@
 "use client";
 
-import {NavBarNotConnected} from "@/ui/nav-bar/nav-bar-not-connected";
 import {Calendar} from '@/ui/calendar/calendar';
 import { useState } from "react";
 import Link from "next/link";
+import {NavBar} from "@/ui/nav-bar/nav-bar";
 
 export default function Home() {
     const eventDate = new Date(2026, 3, 7);
@@ -21,7 +21,7 @@ export default function Home() {
 
     return (
         <div className="justify-center bg-zinc-50 font-sans pb-4">
-            <NavBarNotConnected />
+            <NavBar/>
 
             <input
                 value={name}

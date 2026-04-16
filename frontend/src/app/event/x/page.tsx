@@ -1,14 +1,14 @@
 "use client";
 
-import {NavBarNotConnected} from "@/ui/nav-bar/nav-bar-not-connected";
 import {Calendar} from '@/ui/calendar/calendar';
+import {NavBar} from "@/ui/nav-bar/nav-bar";
 
 export default function Home() {
     const eventDate = new Date(2026, 3, 7);
 
     return (
         <div className="justify-center bg-zinc-50 font-sans">
-            <NavBarNotConnected />
+            <NavBar/>
 
             <h1 className="font-medium text-black text-6xl text-center w-full py-10">
                 Nom de l’évènement

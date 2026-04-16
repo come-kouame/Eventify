@@ -1,10 +1,11 @@
 import {NavBarNotConnected} from "@/ui/nav-bar/nav-bar-not-connected";
+import {NavBar} from "@/ui/nav-bar/nav-bar";
 
 
 export default function Home() {
     return (
         <div className="min-h-screen bg-zinc-100 font-sans">
-            <NavBarNotConnected/>
+            <NavBar/>
 
             {/* Title */}
             <h1 className="text-5xl text-center py-10">
