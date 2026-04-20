@@ -8,16 +8,26 @@ public class Evenement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_evenement")
     private Long id;
 
+    @Column(name = "titre", nullable = false, length = 100)
     private String titre;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "date_event", nullable = false)
+    private LocalDate dateEvent; // juste la date pour l'instant
+
+    @Column(name = "prix", nullable = false, precision = 6, scale = 2)
     private Double prix;
 
-    private LocalDate dateEvent; // juste la date pour l'instant
+    @Column(name = "orga_id", nullable = false)
+    private Integer orgaId;
+
+    @Column(name = "admin_id")
+    private Integer adminId;
 
     // Getters & Setters
     public Long getId() { return id; }
