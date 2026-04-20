@@ -34,7 +34,7 @@ public class Evenement {
 
     @Getter
     @Setter
-    @Column(name = "prix", nullable = false, precision = 6, scale = 2)
+    @Column(name = "prix", nullable = false)
     private Double prix;
 
     @Column(name = "orga_id", nullable = false)
