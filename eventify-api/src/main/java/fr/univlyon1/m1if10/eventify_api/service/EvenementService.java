@@ -23,7 +23,7 @@ public class EvenementService {
                     dto.setTitre(e.getTitre());
                     dto.setDescription(e.getDescription());
                     dto.setDate(e.getDateEvent().toString());
-                    dto.setPrix(e.getPrix());
+                    dto.setPrix(e.getPrix().doubleValue());
                     return dto;
                 })
                 .toList();
