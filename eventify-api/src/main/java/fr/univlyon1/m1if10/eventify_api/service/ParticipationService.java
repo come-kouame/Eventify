@@ -1,4 +1,6 @@
 package fr.univlyon1.m1if10.eventify_api.service;
+import fr.univlyon1.m1if10.eventify_api.dto.EvenementDTO;
+import fr.univlyon1.m1if10.eventify_api.dto.ParticipantDTO;
 import fr.univlyon1.m1if10.eventify_api.entity.Evenement;
 import fr.univlyon1.m1if10.eventify_api.entity.Participation;
 import fr.univlyon1.m1if10.eventify_api.entity.Utilisateur;
@@ -35,7 +37,16 @@ public class ParticipationService {
         repository.save(p);
     }
 
-    public List<Participation> getParticipantsByEvent(Integer evenementId) {
-        return repository.findByEvenementId(evenementId);
+    public List<ParticipantDTO> getParticipantsByEvent(int id) {
+        return repository.findByEvenementId(id).stream()
+                .map(p -> {
+                    ParticipantDTO dto = new ParticipantDTO();
+                    Utilisateur tempu = p.getUtilisateur();
+                    dto.setId(tempu.getId());
+                    dto.setNom(tempu.getNom());
+                    dto.setPrenom(tempu.getPrenom());
+                    return dto;
+                })
+                .toList();
     }
 }
