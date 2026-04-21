@@ -34,7 +34,7 @@ public class EvenementService {
         e.setTitre(dto.getTitre());
         e.setDescription(dto.getDescription());
         e.setDateEvent(java.time.LocalDate.parse(dto.getDate()));
-        e.setPrix(java.math.BigDecimal.valueOf(dto.getPrix()));
+        e.setPrix(dto.getPrix());
 
         e.setOrgaId(1); //TODO à modifier
         e.setAdminId(1); //TODO à modifier
@@ -58,7 +58,7 @@ public class EvenementService {
         dto.setTitre(e.getTitre());
         dto.setDescription(e.getDescription());
         dto.setDate(e.getDateEvent().toString());
-        dto.setPrix(e.getPrix().doubleValue());
+        dto.setPrix(e.getPrix());
 
         return dto;
     }

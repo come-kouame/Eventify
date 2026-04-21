@@ -27,7 +27,7 @@ public class Evenement {
     private LocalDate dateEvent; // juste la date pour l'instant
 
     @Column(name = "prix", nullable = false)
-    private BigDecimal prix;
+    private Double prix;
 
     @Column(name = "orga_id", nullable = false)
     private Integer orgaId;
