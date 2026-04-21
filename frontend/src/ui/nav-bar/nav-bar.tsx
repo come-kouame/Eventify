@@ -1,3 +1,5 @@
+"use client";
+
 import {NavBarAdmin} from "@/ui/nav-bar/nav-bar-admin";
 import {NavBarOrga} from "@/ui/nav-bar/nav-bar-orga";
 import {NavBarUser} from "@/ui/nav-bar/nav-bar-user";
