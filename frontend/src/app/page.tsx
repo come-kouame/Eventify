@@ -1,5 +1,3 @@
-"use client";
-
 import {NavBar} from "@/ui/nav-bar/nav-bar"
 import {Calendar} from "@/ui/calendar/calendar";
 import {BlocEvenements} from "@/ui/event/bloc-evenements"

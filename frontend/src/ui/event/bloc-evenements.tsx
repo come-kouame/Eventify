@@ -1,3 +1,4 @@
+"use client";
 import {EventPresentation} from "@/ui/event/event-presentation";
 import {getAllEvents, Event} from "@/services/events";
 import {useEffect, useState} from "react";

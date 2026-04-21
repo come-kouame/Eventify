@@ -11,6 +11,6 @@ export async function getHelloMessage(): Promise<string> {
     return data[0].content;
 }
 
-export async function getUserStatus(): Promise<string> {
+export function getUserStatus() {
     return "admin";
 }
