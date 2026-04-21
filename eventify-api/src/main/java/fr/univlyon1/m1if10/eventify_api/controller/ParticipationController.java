@@ -1,5 +1,6 @@
 package fr.univlyon1.m1if10.eventify_api.controller;
 
+import fr.univlyon1.m1if10.eventify_api.dto.ParticipantDTO;
 import fr.univlyon1.m1if10.eventify_api.entity.Participation;
 import fr.univlyon1.m1if10.eventify_api.service.ParticipationService;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class ParticipationController {
 
     // Voir les participants d’un événement
     @GetMapping("/evenement/{id}")
-    public List<Participation> getParticipants(@PathVariable Integer id) {
+    public List<ParticipantDTO> getParticipants(@PathVariable Integer id) {
         return service.getParticipantsByEvent(id);
     }
 }

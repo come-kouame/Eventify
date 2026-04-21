@@ -1,5 +1,6 @@
 package fr.univlyon1.m1if10.eventify_api.entity;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.Setter;
 
 @Setter
