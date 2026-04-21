@@ -1,5 +1,6 @@
 package fr.univlyon1.m1if10.eventify_api.controller;
 
+import fr.univlyon1.m1if10.eventify_api.dto.EvenementDTO;
 import fr.univlyon1.m1if10.eventify_api.entity.Evenement;
 import fr.univlyon1.m1if10.eventify_api.service.EvenementService;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class EvenementController {
 
     // Récupérer tous les événements
     @GetMapping
-    public List<Evenement> getEvenements() {
+    public List<EvenementDTO> getEvenements() {
         return service.getAllEvenements();
     }
     /*
