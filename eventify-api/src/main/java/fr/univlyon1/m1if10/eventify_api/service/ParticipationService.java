@@ -49,4 +49,24 @@ public class ParticipationService {
                 })
                 .toList();
     }
+    public List<EvenementDTO> getEvenementsByUtilisateur(int id) {
+        return repository.findByEvenementId(id).stream()
+                .map(p -> {
+                    EvenementDTO dto = toDTO(p.getEvenement());
+                    return dto;
+                })
+                .toList();
+    }
+
+    private EvenementDTO toDTO(Evenement e) {
+        EvenementDTO dto = new EvenementDTO();
+
+        dto.setId(e.getId());
+        dto.setTitre(e.getTitre());
+        dto.setDescription(e.getDescription());
+        dto.setDate(e.getDateEvent().toString());
+        dto.setPrix(e.getPrix().doubleValue());
+
+        return dto;
+    }
 }
