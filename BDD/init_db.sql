@@ -36,15 +36,23 @@ CREATE TABLE IF NOT EXISTS administrateur (
     id_admin SERIAL PRIMARY KEY,
     organisateur_id INT NOT NULL UNIQUE,
     FOREIGN KEY (organisateur_id) REFERENCES organisateur(id_orga) ON DELETE CASCADE
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id) ON DELETE CASCADE
 );
 
 -- Table evenement
-CREATE TABLE IF NOT EXISTS evenement (
+CREATE TABLE evenement (
     id_evenement SERIAL PRIMARY KEY,
     titre VARCHAR(100) NOT NULL,
     description TEXT,
-    date_event DATE NOT NULL,
+    date_debut DATE NOT NULL,
+    date_fin DATE NOT NULL,
+    lieu VARCHAR(150) NOT NULL,
+    adresse VARCHAR(255) NOT NULL,
+    poster VARCHAR(255),
     prix DECIMAL(6,2) NOT NULL,
+    nb_places INT NOT NULL,
+    nb_places_vendues INT DEFAULT 0,
+    valide BOOLEAN DEFAULT FALSE,
     orga_id INT NOT NULL,
     admin_id INT,
     FOREIGN KEY (orga_id) REFERENCES organisateur(id_orga) ON DELETE CASCADE,
@@ -93,8 +101,12 @@ ON CONFLICT (utilisateur_id) DO NOTHING;
 -- Création de l'administrateur
 -- =====================================
 -- Claire est admin
-INSERT INTO administrateur (organisateur_id) VALUES
-((SELECT id_orga FROM organisateur WHERE utilisateur_id = (SELECT id FROM utilisateur WHERE login='claire35')))
+INSERT INTO administrateur (organisateur_id, utilisateur_id) VALUES
+(
+ (SELECT id_orga FROM organisateur 
+  WHERE utilisateur_id = (SELECT id FROM utilisateur WHERE login='claire35')),
+ (SELECT id FROM utilisateur WHERE login='claire35')
+)
 ON CONFLICT (organisateur_id) DO NOTHING;
 
 -- =====================================
