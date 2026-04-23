@@ -1,10 +1,9 @@
-"use client";
 import {NavBarNotConnected} from "@/ui/nav-bar/nav-bar-not-connected";
 import {NavBar} from "@/ui/nav-bar/nav-bar";
-import { getAllUser } from "@/services/user";
 
-export default async function Home() {
-    const users = await getAllUser();
+import { LigneProfile } from "@/ui/profile/ligne-profile";
+
+export default function Home() {
     return (
         <div className="min-h-screen bg-zinc-100 font-sans">
             <NavBar/>
@@ -57,30 +56,7 @@ export default async function Home() {
                             </tr>
                         </thead>
                         <tbody>
-                            {users.map((user) => (
-                                <tr key={user.id} className="border-t">
-                                    <td className="p-2">{user.nom}</td>
-                                    <td className="p-2">{user.prenom}</td>
-                                    <td className="p-2">{user.email}</td>
-                                    <td className="p-2">Utilisateur</td>
-                                    <td className="p-2">
-                                        <a href={`/profiles/x`} className="bg-blue-500 text-white px-4 py-1 rounded">
-                                            Modifier
-                                        </a>
-                                    </td>
-                                </tr>
-                            ))}
-
-                            {/* Empty rows for layout */}
-                            {Array.from({ length: 12 }).map((_, i) => (
-                                <tr key={i} className="border-t">
-                                    <td className="p-2">&nbsp;</td>
-                                    <td className="p-2"></td>
-                                    <td className="p-2"></td>
-                                    <td className="p-2"></td>
-                                    <td className="p-2"></td>
-                                </tr>
-                            ))}
+                            <LigneProfile />
                         </tbody>
                     </table>
                 </div>
