@@ -1,10 +1,15 @@
 package fr.univlyon1.m1if10.eventify_api.service;
 
+import fr.univlyon1.m1if10.eventify_api.dto.AuthResponseDTO;
+import fr.univlyon1.m1if10.eventify_api.dto.LoginDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurCreateDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurDTO;
 import fr.univlyon1.m1if10.eventify_api.entity.Utilisateur;
 import fr.univlyon1.m1if10.eventify_api.repository.UtilisateurRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -14,9 +19,11 @@ import java.util.List;
 public class UtilisateurService {
 
     private final UtilisateurRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UtilisateurService(UtilisateurRepository repository) {
+    public UtilisateurService(UtilisateurRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UtilisateurDTO> getAllUtilisateurs() {
@@ -33,6 +40,12 @@ public class UtilisateurService {
     }
 
     public UtilisateurDTO createUtilisateur(UtilisateurCreateDTO dto) {
+        if (repository.existsByEmail(dto.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email déjà utilisé");
+        }
+        if (repository.existsByLogin(dto.getLogin())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Login déjà utilisé");
+        }
         Utilisateur u = new Utilisateur();
         u.setNom(dto.getNom());
         u.setPrenom(dto.getPrenom());
@@ -42,7 +55,7 @@ public class UtilisateurService {
         u.setRue(dto.getRue());
         u.setCodePostal(dto.getCodePostal());
         u.setLogin(dto.getLogin());
-        u.setMdp(dto.getMdp());
+        u.setMdp(passwordEncoder.encode(dto.getMdp()));
         Utilisateur saved = repository.save(u);
         return toDTO(saved);
     }
@@ -51,6 +64,45 @@ public class UtilisateurService {
         repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur non trouvé " + id));
         repository.deleteById(id);
+    }
+
+    public AuthResponseDTO login(LoginDTO dto, HttpServletRequest request) {
+        Utilisateur user = repository.findByLogin(dto.getLogin())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.UNAUTHORIZED,
+                        "Identifiants invalides"
+                ));
+
+        if (!passwordEncoder.matches(dto.getMdp(), user.getMdp())) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Identifiants invalides"
+            );
+        }
+
+        HttpSession session = request.getSession(true);
+        session.setAttribute("userId", user.getId());
+        session.setAttribute("login", user.getLogin());
+
+        AuthResponseDTO res = new AuthResponseDTO();
+        res.setLogin(user.getLogin());
+        return res;
+    }
+
+    public Utilisateur getCurrentUser(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+
+        if (session == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non connecté");
+        }
+
+        Integer userId = (Integer) session.getAttribute("userId");
+
+        return repository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.UNAUTHORIZED,
+                        "Session invalide"
+                ));
     }
 
     private UtilisateurDTO toDTO(Utilisateur u) {
