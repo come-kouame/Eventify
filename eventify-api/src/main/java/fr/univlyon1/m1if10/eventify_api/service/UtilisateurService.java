@@ -4,6 +4,7 @@ import fr.univlyon1.m1if10.eventify_api.dto.AuthResponseDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.LoginDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurCreateDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurDTO;
+import fr.univlyon1.m1if10.eventify_api.entity.Evenement;
 import fr.univlyon1.m1if10.eventify_api.entity.Utilisateur;
 import fr.univlyon1.m1if10.eventify_api.repository.UtilisateurRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -60,6 +61,22 @@ public class UtilisateurService {
         u.setMdp(passwordEncoder.encode(dto.getMdp()));
         Utilisateur saved = repository.save(u);
         return toDTO(saved);
+    }
+
+    public UtilisateurDTO editUtilisateur(Integer id, UtilisateurCreateDTO dto) {
+        Utilisateur u = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur non trouvé"));
+        u.setNom(dto.getNom());
+        u.setPrenom(dto.getPrenom());
+        u.setDateNaissance(dto.getDateNaissance());
+        u.setEmail(dto.getEmail());
+        u.setVille(dto.getVille());
+        u.setRue(dto.getRue());
+        u.setCodePostal(dto.getCodePostal());
+        u.setLogin(dto.getLogin());
+        u.setMdp(passwordEncoder.encode(dto.getMdp()));
+        Utilisateur updated = repository.save(u);
+        return toDTO(updated);
     }
 
     public void deleteUtilisateur(Integer id) {
