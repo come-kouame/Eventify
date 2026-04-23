@@ -22,4 +22,8 @@ public class EvenementDTO {
     private Boolean valide;
     private Integer orga_id;
     private Integer admin_id;
+
+    public boolean isValide() {
+        return this.valide;
+    }
 }
