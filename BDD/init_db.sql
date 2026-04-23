@@ -101,8 +101,12 @@ ON CONFLICT (utilisateur_id) DO NOTHING;
 -- Création de l'administrateur
 -- =====================================
 -- Claire est admin
-INSERT INTO administrateur (organisateur_id) VALUES
-((SELECT id_orga FROM organisateur WHERE utilisateur_id = (SELECT id FROM utilisateur WHERE login='claire35')))
+INSERT INTO administrateur (organisateur_id, utilisateur_id) VALUES
+(
+ (SELECT id_orga FROM organisateur 
+  WHERE utilisateur_id = (SELECT id FROM utilisateur WHERE login='claire35')),
+ (SELECT id FROM utilisateur WHERE login='claire35')
+)
 ON CONFLICT (organisateur_id) DO NOTHING;
 
 -- =====================================
