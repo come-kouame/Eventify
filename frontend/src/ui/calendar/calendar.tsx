@@ -4,12 +4,10 @@ export const Calendar = ({
     date,
     startDate,
     endDate,
-    onSelectDate,
 }: {
     date: Date;
-    startDate: Date | null;
-    endDate: Date | null;
-    onSelectDate: (d: Date) => void;
+    startDate?: Date | null;
+    endDate?: Date | null;
 }) => {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -62,7 +60,6 @@ export const Calendar = ({
                     return (
                         <div
                             key={i}
-                            onClick={() => onSelectDate(currentDate)}
                             className={`py-1 cursor-pointer rounded
                 ${isStart || isEnd ? "bg-blue-600 text-white" : ""}
                 ${!isStart && !isEnd && inRange ? "bg-blue-200" : ""}
