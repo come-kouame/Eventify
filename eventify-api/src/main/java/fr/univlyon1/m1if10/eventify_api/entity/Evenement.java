@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class Evenement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_evenement")
     private Integer id;
 
     @Column(name = "titre", nullable = false, length = 100)
@@ -50,9 +50,9 @@ public class Evenement {
     @Column(name = "valide")
     private boolean valide;
 
-    @Column(name = "orgaId", nullable = false)
+    @Column(name = "orga_id", nullable = false)
     private Integer orgaId;
 
-    @Column(name = "adminId")
+    @Column(name = "admin_id")
     private Integer adminId;
 }
