@@ -18,7 +18,7 @@ public class ParticipationService {
         this.repository = repository;
     }
 
-    public void participer(Integer utilisateurId, Integer evenementId) {
+    public void inscrireUtilisateur(Integer utilisateurId, Integer evenementId) {
         if (repository.existsByUtilisateurIdAndEvenementId(utilisateurId, evenementId)) {
             throw new RuntimeException("Déjà inscrit");
         }
@@ -64,8 +64,17 @@ public class ParticipationService {
         dto.setId(e.getId());
         dto.setTitre(e.getTitre());
         dto.setDescription(e.getDescription());
-        dto.setDate(e.getDateEvent().toString());
-        dto.setPrix(e.getPrix().doubleValue());
+        dto.setDate_debut(e.getDate_debut());
+        dto.setDate_fin(e.getDate_fin());
+        dto.setLieu(e.getLieu());
+        dto.setAdresse(e.getAdresse());
+        dto.setPoster(e.getPoster());
+        dto.setPrix(e.getPrix());
+        dto.setNb_places(e.getNb_places());
+        dto.setNb_places_vendues(e.getNb_places_vendues());
+        dto.setValide(e.isValide());
+        dto.setOrga_id(e.getOrgaId());
+        dto.setAdmin_id(e.getAdminId());
 
         return dto;
     }

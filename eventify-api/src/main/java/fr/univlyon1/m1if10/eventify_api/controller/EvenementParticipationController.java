@@ -18,8 +18,15 @@ public class EvenementParticipationController {
     }
 
     // GET /evenements/{id}/participations
-    @GetMapping("/{id}/participations")
+    @GetMapping("/{id}/participants")
     public List<UtilisateurDTO> getParticipantsByEvent(@PathVariable int id) {
         return service.getParticipantsByEvent(id);
+    }
+
+    // Inscrire un utilisateur à un événement
+    // GET /evenements/{id}/inscription?userId=1
+    @GetMapping("/{id}/inscription")
+    public void inscrireUtilisateur(@PathVariable int id, @RequestParam("userId") int userId) {
+        service.inscrireUtilisateur(id, userId);
     }
 }
