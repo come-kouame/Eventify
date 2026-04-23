@@ -20,10 +20,12 @@ public class UtilisateurService {
 
     private final UtilisateurRepository repository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
 
-    public UtilisateurService(UtilisateurRepository repository, PasswordEncoder passwordEncoder) {
+    public UtilisateurService(UtilisateurRepository repository, PasswordEncoder passwordEncoder, RoleService roleService) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
+        this.roleService = roleService;
     }
 
     public List<UtilisateurDTO> getAllUtilisateurs() {
@@ -83,7 +85,7 @@ public class UtilisateurService {
         HttpSession session = request.getSession(true);
         session.setAttribute("userId", user.getId());
         session.setAttribute("login", user.getLogin());
-
+        session.setAttribute("role", roleService.getRole(user.getId()));
         AuthResponseDTO res = new AuthResponseDTO();
         res.setLogin(user.getLogin());
         return res;
