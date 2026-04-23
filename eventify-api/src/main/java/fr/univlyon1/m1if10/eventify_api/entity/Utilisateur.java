@@ -1,5 +1,6 @@
 package fr.univlyon1.m1if10.eventify_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,13 +38,10 @@ public class Utilisateur {
     @Column(name = "code_postal", nullable = false, length = 10)
     private String codePostal;
 
-    @Getter
-    @Setter
     @Column(name = "login", nullable = false, unique = true, length = 50)
     private String login;
 
-    @Getter
-    @Setter
+    @JsonIgnore
     @Column(name = "mdp", nullable = false, length = 100)
     private String mdp;
 }
