@@ -1,7 +1,11 @@
 package fr.univlyon1.m1if10.eventify_api.repository;
 
-import fr.univlyon1.m1if10.eventify_api.entity.Evenement;
+import fr.univlyon1.m1if10.eventify_api.entity.Administrateur;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AdministrateurRepository extends JpaRepository<Evenement, Integer> {
+import java.util.Optional;
+
+public interface AdministrateurRepository extends JpaRepository<Administrateur, Integer> {
+    boolean existsByOrganisateurId(Integer organisateurId);
+    Optional<Administrateur> findByOrganisateurId(Integer organisateurId);
 }
