@@ -75,7 +75,7 @@ public class EvenementService {
         return toDTO(updated);
     }
 
-    public EvenementDTO validateEvenement(Integer id, EvenementDTO dto) {
+    public EvenementDTO validateEvenement(Integer id) {
         Evenement e = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Evenement non trouvé"));
 
