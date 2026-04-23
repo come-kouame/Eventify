@@ -1,8 +1,10 @@
+"use client";
 import {NavBarNotConnected} from "@/ui/nav-bar/nav-bar-not-connected";
 import {NavBar} from "@/ui/nav-bar/nav-bar";
+import { getAllUser } from "@/services/user";
 
-
-export default function Home() {
+export default async function Home() {
+    const users = await getAllUser();
     return (
         <div className="min-h-screen bg-zinc-100 font-sans">
             <NavBar/>
@@ -55,17 +57,19 @@ export default function Home() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="border-t">
-                                <td className="p-2">Morel</td>
-                                <td className="p-2">Louis</td>
-                                <td className="p-2">lm38550@gmail.com</td>
-                                <td className="p-2">Administrateur</td>
-                                <td className="p-2">
-                                    <a href="/profiles/x" className="bg-blue-500 text-white px-4 py-1 rounded">
-                                        Modifier
-                                    </a>
-                                </td>
-                            </tr>
+                            {users.map((user) => (
+                                <tr key={user.id} className="border-t">
+                                    <td className="p-2">{user.nom}</td>
+                                    <td className="p-2">{user.prenom}</td>
+                                    <td className="p-2">{user.email}</td>
+                                    <td className="p-2">Utilisateur</td>
+                                    <td className="p-2">
+                                        <a href={`/profiles/x`} className="bg-blue-500 text-white px-4 py-1 rounded">
+                                            Modifier
+                                        </a>
+                                    </td>
+                                </tr>
+                            ))}
 
                             {/* Empty rows for layout */}
                             {Array.from({ length: 12 }).map((_, i) => (
