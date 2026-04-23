@@ -41,6 +41,11 @@ public class EvenementController {
         return service.editEvenement(id, dto);
     }
 
+    @PutMapping("/{id}")
+    public EvenementDTO validateEvenement(@PathVariable Integer id) {
+        return service.validateEvenement(id);
+    }
+
     // Supprimer un événement par son ID
     @DeleteMapping("/{id}")
     public void deleteEvenement(@PathVariable Integer id) {

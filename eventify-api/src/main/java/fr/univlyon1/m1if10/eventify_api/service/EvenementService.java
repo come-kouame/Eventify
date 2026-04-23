@@ -75,6 +75,22 @@ public class EvenementService {
         return toDTO(updated);
     }
 
+    public EvenementDTO validateEvenement(Integer id, EvenementDTO dto) {
+        Evenement e = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Evenement non trouvé"));
+
+        if (e.isValide()) {
+
+            throw new RuntimeException("Evenement déjà validé");
+        }
+
+        e.setValide(true);
+
+        Evenement updated = repository.save(e);
+
+        return toDTO(updated);
+    }
+
     public void deleteEvenement(Integer id) {
         repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Événement non trouvé " + id));
