@@ -35,6 +35,12 @@ public class EvenementController {
         return service.createEvenement(dto);
     }
 
+    // Modifier un événement existant
+    @PutMapping("/{id}")
+    public EvenementDTO updateEvenement(@PathVariable Integer id, @RequestBody EvenementDTO dto) {
+        return service.editEvenement(id, dto);
+    }
+
     // Supprimer un événement par son ID
     @DeleteMapping("/{id}")
     public void deleteEvenement(@PathVariable Integer id) {
