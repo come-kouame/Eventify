@@ -1,0 +1,413 @@
+openapi: 3.1.0
+info:
+  description: "Description de l'API du serveur de gestion des ressources de l'application \"eventify\"."
+  title: "Eventify"
+  version: "1.0.0"
+servers:
+  - url: "http://localhost:8080"
+tags:
+  - name: Utilisateur
+  - name: Evenement
+paths:
+  /utilisateurs:
+    get:
+      tags:
+        - Utilisateur
+      summary: Récupérer tous les utilisateurs
+      operationId: getUtilisateurs
+      responses:
+        "200":
+          description: Liste des utilisateurs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    nom:
+                      type: string
+                    prenom:
+                      type: string
+                    dateNaissance:
+                      type: string
+                    email:
+                      type: string
+                    ville:
+                      type: string
+                    rue:
+                      type: string
+                    codePostal:
+                      type: string
+                    login:
+                      type: string
+
+    post:
+      tags:
+        - Utilisateur
+      summary: Créer un utilisateur
+      operationId: createUtilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nom:
+                  type: string
+                prenom:
+                  type: string
+                dateNaissance:
+                  type: string
+                email:
+                  type: string
+                ville:
+                  type: string
+                rue:
+                  type: string
+                codePostal:
+                  type: string
+                login:
+                  type: string
+                mdp:
+                  type: string
+      responses:
+        "200":
+          description: Utilisateur créé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nom:
+                    type: string
+                  prenom:
+                    type: string
+                  dateNaissance:
+                    type: string
+                  email:
+                    type: string
+                  ville:
+                    type: string
+                  rue:
+                    type: string
+                  codePostal:
+                    type: string
+                  login:
+                    type: string
+
+  /utilisateurs/{id}:
+    get:
+      tags:
+        - Utilisateur
+      summary: Récupérer un utilisateur par ID
+      operationId: getUtilisateurById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Utilisateur trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nom:
+                    type: string
+                  prenom:
+                    type: string
+                  dateNaissance:
+                    type: string
+                  email:
+                    type: string
+                  ville:
+                    type: string
+                  rue:
+                    type: string
+                  codePostal:
+                    type: string
+                  login:
+                    type: string
+
+        "404":
+          description: Utilisateur non trouvé
+
+    delete:
+      tags:
+        - Utilisateur
+      summary: Supprimer un utilisateur
+      operationId: deleteUtilisateur
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Utilisateur supprimé
+        "404":
+          description: Utilisateur non trouvé
+
+  /evenements:
+    get:
+      tags:
+        - Evenement
+      summary: Récupérer tous les événements
+      operationId: getEvenements
+      responses:
+        "200":
+          description: Liste des événements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    titre:
+                      type: string
+                    description:
+                      type: string
+                    date_debut:
+                      type: string
+                    date_fin:
+                      type: string
+                    lieu:
+                      type: string
+                    adresse:
+                      type: string
+                    poster:
+                      type: string
+                    prix:
+                      type: number
+                    nb_places:
+                      type: integer
+                    nb_places_vendues:
+                      type: integer
+                    valide:
+                      type: boolean
+                    orga_id:
+                      type: integer
+                    admin_id:
+                      type: integer
+
+    post:
+      tags:
+        - Evenement
+      summary: Créer un événement
+      operationId: createEvenement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                titre:
+                  type: string
+                description:
+                  type: string
+                date_debut:
+                  type: string
+                date_fin:
+                  type: string
+                lieu:
+                  type: string
+                adresse:
+                  type: string
+                poster:
+                  type: string
+                prix:
+                  type: number
+                nb_places:
+                  type: integer
+                nb_places_vendues:
+                  type: integer
+                orga_id:
+                  type: integer
+      responses:
+        "200":
+          description: Événement créé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  titre:
+                    type: string
+                  description:
+                    type: string
+                  date_debut:
+                    type: string
+                  date_fin:
+                    type: string
+                  lieu:
+                    type: string
+                  adresse:
+                    type: string
+                  poster:
+                    type: string
+                  prix:
+                    type: number
+                  nb_places:
+                    type: integer
+                  nb_places_vendues:
+                    type: integer
+                  valide:
+                    type: boolean
+                  orga_id:
+                    type: integer
+                  admin_id:
+                    type: integer
+
+  /evenements/{id}:
+    get:
+      tags:
+        - Evenement
+      summary: Récupérer un événement par ID
+      operationId: getEvenementById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Événement trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  titre:
+                    type: string
+                  description:
+                    type: string
+                  date_debut:
+                    type: string
+                  date_fin:
+                    type: string
+                  lieu:
+                    type: string
+                  adresse:
+                    type: string
+                  poster:
+                    type: string
+                  prix:
+                    type: number
+                  nb_places:
+                    type: integer
+                  nb_places_vendues:
+                    type: integer
+                  valide:
+                    type: boolean
+                  orga_id:
+                    type: integer
+                  admin_id:
+                    type: integer
+        "404":
+          description: Événement non trouvé
+
+    put:
+      tags:
+        - Evenement
+      summary: Modifier un événement
+      operationId: updateEvenement
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                titre:
+                  type: string
+                description:
+                  type: string
+                date_debut:
+                  type: string
+                date_fin:
+                  type: string
+                lieu:
+                  type: string
+                adresse:
+                  type: string
+                poster:
+                  type: string
+                prix:
+                  type: number
+                nb_places:
+                  type: integer
+                nb_places_vendues:
+                  type: integer
+                valide:
+                  type: boolean
+                orga_id:
+                  type: integer
+                admin_id:
+                  type: integer
+      responses:
+        "200":
+          description: Événement modifié
+
+    delete:
+      tags:
+        - Evenement
+      summary: Supprimer un événement
+      operationId: deleteEvenement
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Événement supprimé
+        "404":
+          description: Événement non trouvé
+
+  /evenements/{id}/validate:
+    put:
+      tags:
+        - Evenement
+      summary: Valider un événement
+      operationId: validateEvenement
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Événement validé
+        "400":
+          description: Déjà validé
+        "404":
+          description: Événement non trouvé
