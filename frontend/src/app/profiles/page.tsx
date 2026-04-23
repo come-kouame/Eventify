@@ -1,6 +1,7 @@
 import {NavBarNotConnected} from "@/ui/nav-bar/nav-bar-not-connected";
 import {NavBar} from "@/ui/nav-bar/nav-bar";
 
+import { LigneProfile } from "@/ui/profile/ligne-profile";
 
 export default function Home() {
     return (
@@ -55,28 +56,7 @@ export default function Home() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="border-t">
-                                <td className="p-2">Morel</td>
-                                <td className="p-2">Louis</td>
-                                <td className="p-2">lm38550@gmail.com</td>
-                                <td className="p-2">Administrateur</td>
-                                <td className="p-2">
-                                    <a href="/profiles/x" className="bg-blue-500 text-white px-4 py-1 rounded">
-                                        Modifier
-                                    </a>
-                                </td>
-                            </tr>
-
-                            {/* Empty rows for layout */}
-                            {Array.from({ length: 12 }).map((_, i) => (
-                                <tr key={i} className="border-t">
-                                    <td className="p-2">&nbsp;</td>
-                                    <td className="p-2"></td>
-                                    <td className="p-2"></td>
-                                    <td className="p-2"></td>
-                                    <td className="p-2"></td>
-                                </tr>
-                            ))}
+                            <LigneProfile />
                         </tbody>
                     </table>
                 </div>
