@@ -411,3 +411,144 @@ paths:
           description: Déjà validé
         "404":
           description: Événement non trouvé
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Connexion utilisateur
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                login:
+                  type: string
+                mdp:
+                  type: string
+      responses:
+        "200":
+          description: Connexion réussie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  login:
+                    type: string
+
+  /auth/logout:
+    post:
+      tags:
+        - Auth
+      summary: Déconnexion utilisateur
+      operationId: logout
+      responses:
+        "200":
+          description: Déconnexion réussie
+
+  /evenements/{id}/participants:
+    get:
+      tags:
+        - Participation (evenement)
+      summary: Récupérer les participants d’un événement
+      operationId: getParticipantsByEvent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Liste des participants
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    nom:
+                      type: string
+                    prenom:
+                      type: string
+
+  /evenements/{id}/inscription:
+    put:
+      tags:
+        - Participation (inscription)
+      summary: Inscrire un utilisateur à un événement
+      operationId: inscrireUtilisateur
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Inscription réussie
+        "400":
+          description: Déjà inscrit ou erreur
+
+  /utilisateurs/{id}/participations:
+    get:
+      tags:
+        - Participation (utilisateur)
+      summary: Récupérer les événements d’un utilisateur
+      operationId: getEvenementsByUtilisateur
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Liste des événements auxquels l’utilisateur participe
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    titre:
+                      type: string
+                    description:
+                      type: string
+                    date_debut:
+                      type: string
+                    date_fin:
+                      type: string
+                    lieu:
+                      type: string
+                    adresse:
+                      type: string
+                    poster:
+                      type: string
+                    prix:
+                      type: number
+                    nb_places:
+                      type: integer
+                    nb_places_vendues:
+                      type: integer
+                    valide:
+                      type: boolean
+                    orga_id:
+                      type: integer
+                    admin_id:
+                      type: integer
