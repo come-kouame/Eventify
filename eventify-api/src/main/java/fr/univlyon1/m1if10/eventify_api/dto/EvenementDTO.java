@@ -17,9 +17,9 @@ public class EvenementDTO {
     private String adresse;
     private String poster;
     private Double prix;
-    private int nb_places;
-    private int nb_places_vendues;
-    private boolean valide;
-    private int orga_id;
-    private int admin_id;
+    private Integer nb_places;
+    private Integer nb_places_vendues;
+    private Boolean valide;
+    private Integer orga_id;
+    private Integer admin_id;
 }
