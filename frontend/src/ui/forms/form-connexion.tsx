@@ -1,15 +1,14 @@
 "use client";
 
 import { useState } from "react";
-
 export function FormConnexion() {
     const [email, setEmail] = useState("");
     const [mdp, setMdp] = useState("");
     const [error, setError] = useState("");
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError("");
+    const handleSubmit = async (e: any) => {
+    console.log("CLICK LOGIN ");
+    e.preventDefault();
 
         try {
             const res = await fetch("http://localhost:8080/auth/login", {
@@ -24,11 +23,17 @@ export function FormConnexion() {
                 }),
             });
 
+            console.log("STATUS:", res.status);
+            console.log("OK:", res.ok);
+
+            const text = await res.text();
+            console.log("REPONSE BACK:", text);
+
             if (!res.ok) {
                 throw new Error("Identifiants invalides");
             }
 
-            const data = await res.json();
+            const data = JSON.parse(text);
             console.log("Connexion réussie :", data);
 
             window.location.href = "/";
