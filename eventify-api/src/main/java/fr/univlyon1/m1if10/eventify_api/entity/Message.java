@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(name = "messages")
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
