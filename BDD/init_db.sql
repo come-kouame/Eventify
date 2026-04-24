@@ -23,7 +23,6 @@ CREATE TABLE IF NOT EXISTS utilisateur (
     ville VARCHAR(100) NOT NULL,
     rue VARCHAR(150) NOT NULL,
     code_postal VARCHAR(10) NOT NULL,
-    login VARCHAR(50) UNIQUE NOT NULL,
     mdp VARCHAR(100) NOT NULL
 );
 
