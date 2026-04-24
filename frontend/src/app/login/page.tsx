@@ -12,7 +12,7 @@ import {NavBar} from "@/ui/nav-bar/nav-bar";
 export default function Home() {
     return (
         <div className=" justify-center bg-zinc-50 font-sans ">
-            <NavBar/>
+            <NavBarNotConnected/>
 
             <h1 className="font-medium text-black text-6xl text-center w-full py-10">Connectez-Vous</h1>
             <main className="flex min-h-screen w-full gap-8 px-16 sm:items-start">
