@@ -41,8 +41,6 @@ paths:
                       type: string
                     codePostal:
                       type: string
-                    login:
-                      type: string
 
     post:
       tags:
@@ -70,36 +68,43 @@ paths:
                   type: string
                 codePostal:
                   type: string
-                login:
-                  type: string
                 mdp:
                   type: string
       responses:
         "200":
           description: Utilisateur créé
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  nom:
-                    type: string
-                  prenom:
-                    type: string
-                  dateNaissance:
-                    type: string
-                  email:
-                    type: string
-                  ville:
-                    type: string
-                  rue:
-                    type: string
-                  codePostal:
-                    type: string
-                  login:
-                    type: string
+
+    put:
+      tags:
+        - Utilisateur
+      summary: Modifier un utilisateur
+      operationId: editUtilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nom:
+                  type: string
+                prenom:
+                  type: string
+                dateNaissance:
+                  type: string
+                email:
+                  type: string
+                ville:
+                  type: string
+                rue:
+                  type: string
+                codePostal:
+                  type: string
+                mdp:
+                  type: string
+      responses:
+        "200":
+          description: Utilisateur modifié
 
   /utilisateurs/{id}:
     get:
@@ -137,8 +142,6 @@ paths:
                     type: string
                   codePostal:
                     type: string
-                  login:
-                    type: string
 
         "404":
           description: Utilisateur non trouvé
@@ -165,7 +168,7 @@ paths:
       tags:
         - Evenement
       summary: Récupérer tous les événements
-      operationId: getEvenements
+      operationId: getAllEvenements
       responses:
         "200":
           description: Liste des événements
@@ -275,6 +278,51 @@ paths:
                     type: integer
                   admin_id:
                     type: integer
+
+  /evenements/valides:
+    get:
+      tags:
+        - Evenement
+      summary: Récupérer tous les événements validés et non passé
+      operationId: getEvenements
+      responses:
+        "200":
+          description: Liste des événements validés et non passé
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    titre:
+                      type: string
+                    description:
+                      type: string
+                    date_debut:
+                      type: string
+                    date_fin:
+                      type: string
+                    lieu:
+                      type: string
+                    adresse:
+                      type: string
+                    poster:
+                      type: string
+                    prix:
+                      type: number
+                    nb_places:
+                      type: integer
+                    nb_places_vendues:
+                      type: integer
+                    valide:
+                      type: boolean
+                    orga_id:
+                      type: integer
+                    admin_id:
+                      type: integer
 
   /evenements/{id}:
     get:

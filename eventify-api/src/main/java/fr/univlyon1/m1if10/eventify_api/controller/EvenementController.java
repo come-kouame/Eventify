@@ -18,7 +18,7 @@ public class EvenementController {
 
 
     // Récupérer tous les événements
-    @GetMapping
+    @GetMapping("/valides")
     public List<EvenementDTO> getEvenements() {
         return service.getValidEvenements();
     }
