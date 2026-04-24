@@ -1,5 +1,5 @@
 CREATE TABLE messages (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     content VARCHAR(255) NOT NULL
 );
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS administrateur (
     id_admin SERIAL PRIMARY KEY,
     organisateur_id INT NOT NULL UNIQUE,
     utilisateur_id INT NOT NULL,
-    FOREIGN KEY (organisateur_id) REFERENCES organisateur(id_orga) ON DELETE CASCADE
+    FOREIGN KEY (organisateur_id) REFERENCES organisateur(id_orga) ON DELETE CASCADE,
     FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id) ON DELETE CASCADE
 );
 
@@ -50,7 +50,7 @@ CREATE TABLE evenement (
     lieu VARCHAR(150) NOT NULL,
     adresse VARCHAR(255) NOT NULL,
     poster VARCHAR(255),
-    prix DECIMAL(6,2) NOT NULL,
+    prix DOUBLE PRECISION NOT NULL,
     nb_places INT NOT NULL,
     nb_places_vendues INT DEFAULT 0,
     valide BOOLEAN DEFAULT FALSE,
@@ -113,12 +113,30 @@ ON CONFLICT (organisateur_id) DO NOTHING;
 -- =====================================
 -- Insertion d'un événement
 -- =====================================
-INSERT INTO evenement (titre, description, date_event, prix, orga_id, admin_id) VALUES
-('Soirée Caritative', 'Collecte de fonds pour une asso locale', '2026-04-01', 20.00,
- (SELECT id_orga FROM organisateur WHERE utilisateur_id = (SELECT id FROM utilisateur WHERE login='alice25')),
- (SELECT id_admin FROM administrateur WHERE organisateur_id = (SELECT id_orga FROM organisateur WHERE utilisateur_id = (SELECT id FROM utilisateur WHERE login='claire35'))))
+-- INSERT INTO evenement (titre, description, date_event, prix, orga_id, admin_id) VALUES
+-- ('Soirée Caritative', 'Collecte de fonds pour une asso locale', '2026-04-01', 20.00,
+--  (SELECT id_orga FROM organisateur WHERE utilisateur_id = (SELECT id FROM utilisateur WHERE login='alice25')),
+--  (SELECT id_admin FROM administrateur WHERE organisateur_id = (SELECT id_orga FROM organisateur WHERE utilisateur_id = (SELECT id FROM utilisateur WHERE login='claire35'))))
+-- ON CONFLICT (id_evenement) DO NOTHING;
+INSERT INTO evenement (
+    titre, description, date_debut, date_fin, lieu, adresse, poster,
+    prix, nb_places, nb_places_vendues, valide, orga_id, admin_id
+) VALUES (
+    'Soirée Caritative',
+    'Collecte de fonds pour une asso locale',
+    '2026-04-01',
+    '2026-04-01',
+    'Lyon',
+    '34 avenue de la République',
+    NULL,
+    20.00,
+    100,
+    0,
+    TRUE,
+    (SELECT id_orga FROM organisateur WHERE utilisateur_id = (SELECT id FROM utilisateur WHERE login='alice25')),
+    (SELECT id_admin FROM administrateur WHERE organisateur_id = (SELECT id_orga FROM organisateur WHERE utilisateur_id = (SELECT id FROM utilisateur WHERE login='claire35')))
+)
 ON CONFLICT (id_evenement) DO NOTHING;
-
 -- =====================================
 -- Participation et bénévolat
 -- =====================================
