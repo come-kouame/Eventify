@@ -46,9 +46,6 @@ public class UtilisateurService {
         if (repository.existsByEmail(dto.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email déjà utilisé");
         }
-        if (repository.existsByLogin(dto.getLogin())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Login déjà utilisé");
-        }
         Utilisateur u = new Utilisateur();
         u.setNom(dto.getNom());
         u.setPrenom(dto.getPrenom());
@@ -57,7 +54,6 @@ public class UtilisateurService {
         u.setVille(dto.getVille());
         u.setRue(dto.getRue());
         u.setCodePostal(dto.getCodePostal());
-        u.setLogin(dto.getLogin());
         u.setMdp(passwordEncoder.encode(dto.getMdp()));
         Utilisateur saved = repository.save(u);
         return toDTO(saved);
@@ -73,7 +69,6 @@ public class UtilisateurService {
         u.setVille(dto.getVille());
         u.setRue(dto.getRue());
         u.setCodePostal(dto.getCodePostal());
-        u.setLogin(dto.getLogin());
         u.setMdp(passwordEncoder.encode(dto.getMdp()));
         Utilisateur updated = repository.save(u);
         return toDTO(updated);
@@ -86,7 +81,7 @@ public class UtilisateurService {
     }
 
     public AuthResponseDTO login(LoginDTO dto, HttpServletRequest request) {
-        Utilisateur user = repository.findByLogin(dto.getLogin())
+        Utilisateur user = repository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.UNAUTHORIZED,
                         "Identifiants invalides"
@@ -101,10 +96,10 @@ public class UtilisateurService {
 
         HttpSession session = request.getSession(true);
         session.setAttribute("userId", user.getId());
-        session.setAttribute("login", user.getLogin());
+        session.setAttribute("email", user.getEmail());
         session.setAttribute("role", roleService.getRole(user.getId()));
         AuthResponseDTO res = new AuthResponseDTO();
-        res.setLogin(user.getLogin());
+        res.setEmail(user.getEmail());
         return res;
     }
 
@@ -134,7 +129,6 @@ public class UtilisateurService {
         dto.setVille(u.getVille());
         dto.setRue(u.getRue());
         dto.setCodePostal(u.getCodePostal());
-        dto.setLogin(u.getLogin());
         return dto;
     }
 }
