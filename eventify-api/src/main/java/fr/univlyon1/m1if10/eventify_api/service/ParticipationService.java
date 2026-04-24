@@ -4,35 +4,50 @@ import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurDTO;
 import fr.univlyon1.m1if10.eventify_api.entity.Evenement;
 import fr.univlyon1.m1if10.eventify_api.entity.Participation;
 import fr.univlyon1.m1if10.eventify_api.entity.Utilisateur;
+import fr.univlyon1.m1if10.eventify_api.repository.EvenementRepository;
 import fr.univlyon1.m1if10.eventify_api.repository.ParticipationRepository;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 
 @Service
 public class ParticipationService {
 
+    private final EvenementRepository evenementRepository;
+
+
     private final ParticipationRepository repository;
 
-    public ParticipationService(ParticipationRepository repository) {
+    public ParticipationService(ParticipationRepository repository,
+                                EvenementRepository evenementRepository) {
         this.repository = repository;
+        this.evenementRepository = evenementRepository;
     }
 
     public void inscrireUtilisateur(Integer utilisateurId, Integer evenementId) {
+
         if (repository.existsByUtilisateurIdAndEvenementId(utilisateurId, evenementId)) {
             throw new RuntimeException("Déjà inscrit");
         }
+
+        Evenement evenement = evenementRepository.findById(evenementId)
+                .orElseThrow(() -> new RuntimeException("Evenement non trouvé"));
+
+        if (evenement.getNb_places_vendues() >= evenement.getNb_places()) {
+            throw new RuntimeException("Plus de places disponibles");
+        }
+
+        evenement.setNb_places_vendues(evenement.getNb_places_vendues() + 1);
+        evenementRepository.save(evenement);
 
         Participation p = new Participation();
 
         Utilisateur u = new Utilisateur();
         u.setId(utilisateurId);
 
-        Evenement e = new Evenement();
-        e.setId(evenementId);
-
         p.setUtilisateur(u);
-        p.setEvenement(e);
+        p.setEvenement(evenement);
 
         repository.save(p);
     }
