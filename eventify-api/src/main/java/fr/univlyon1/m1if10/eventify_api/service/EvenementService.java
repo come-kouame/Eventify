@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -20,6 +21,13 @@ public class EvenementService {
 
     public List<EvenementDTO> getAllEvenements() {
         return repository.findAll().stream()
+                .map(this::toDTO)
+                .toList();
+    }
+
+    public List<EvenementDTO> getValidEvenements() {
+        return repository.findAll().stream()
+                .filter(e -> e.isValide() && e.getDate_debut().isAfter(LocalDate.now()))
                 .map(this::toDTO)
                 .toList();
     }

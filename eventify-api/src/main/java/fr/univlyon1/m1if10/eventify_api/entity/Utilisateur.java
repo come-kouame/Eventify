@@ -38,9 +38,6 @@ public class Utilisateur {
     @Column(name = "code_postal", nullable = false, length = 10)
     private String codePostal;
 
-    @Column(name = "login", nullable = false, unique = true, length = 50)
-    private String login;
-
     @JsonIgnore
     @Column(name = "mdp", nullable = false, length = 100)
     private String mdp;
