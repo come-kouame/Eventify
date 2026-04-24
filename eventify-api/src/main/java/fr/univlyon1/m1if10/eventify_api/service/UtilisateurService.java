@@ -69,7 +69,7 @@ public class UtilisateurService {
     }
 
     public AuthResponseDTO login(LoginDTO dto, HttpServletRequest request) {
-        Utilisateur user = repository.findByLogin(dto.getLogin())
+        Utilisateur user = repository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.UNAUTHORIZED,
                         "Identifiants invalides"
