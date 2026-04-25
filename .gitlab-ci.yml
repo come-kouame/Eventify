@@ -14,13 +14,10 @@ sonarqube:
     - ./ci/setup-mvn-proxy.sh
   script:
     - cd eventify-api
-    - mvn verify
-    - cd ..
-    - sonar-scanner 
-      -Dsonar.host.url=https://sonar.info.univ-lyon1.fr 
+    - mvn verify sonar:sonar
+      -Dsonar.host.url=https://sonar.info.univ-lyon1.fr
       -Dsonar.token=$SONAR_TOKEN
-      -Dsonar.java.coveragePlugin=jacoco
-      -Dsonar.coverage.jacoco.xmlReportPaths=eventify-api/target/site/jacoco/jacoco.xml
+      -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
 deploy:
   stage: deploy
