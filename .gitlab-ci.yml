@@ -17,6 +17,7 @@ sonarqube:
     - mvn verify sonar:sonar
       -Dsonar.host.url=https://sonar.info.univ-lyon1.fr
       -Dsonar.token=$SONAR_TOKEN
+      -Dsonar.projectKey=eventify
       -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
 deploy:
