@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS organisateur (
 CREATE TABLE IF NOT EXISTS administrateur (
     id_admin SERIAL PRIMARY KEY,
     organisateur_id INT NOT NULL UNIQUE,
-    utilisateur_id INT NOT NULL,
+    -- utilisateur_id INT NOT NULL,
     FOREIGN KEY (organisateur_id) REFERENCES organisateur(id_orga) ON DELETE CASCADE,
     FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id) ON DELETE CASCADE
 );
