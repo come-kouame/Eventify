@@ -1,5 +1,5 @@
 import Image from "next/image";
-
+import { LogoutButton } from "./LogoutButton";
 export const NavBarAdmin = () => {
     return (
         <>
@@ -14,7 +14,7 @@ export const NavBarAdmin = () => {
                     <a href="/profiles">Gérer les comptes</a>
                     <a href="/event">Mes évènements</a>
                     <a href="/profiles/x">Mon Compte</a>
-                    <a href="">Déconnexion</a>
+                     <LogoutButton />
                 </div>
             </div>
             <div className="h-[1px] bg-black"></div>

@@ -18,8 +18,14 @@ public class EvenementController {
 
 
     // Récupérer tous les événements
-    @GetMapping
+    @GetMapping("/valides")
     public List<EvenementDTO> getEvenements() {
+        return service.getValidEvenements();
+    }
+
+    // Récupérer tous les événements
+    @GetMapping
+    public List<EvenementDTO> getAllEvenements() {
         return service.getAllEvenements();
     }
 
@@ -41,7 +47,7 @@ public class EvenementController {
         return service.editEvenement(id, dto);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/validate")
     public EvenementDTO validateEvenement(@PathVariable Integer id) {
         return service.validateEvenement(id);
     }

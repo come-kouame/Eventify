@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -14,7 +13,7 @@ import java.time.LocalDate;
 public class Evenement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_evenement")
     private Integer id;
 
     @Column(name = "titre", nullable = false, length = 100)
@@ -24,10 +23,10 @@ public class Evenement {
     private String description;
 
     @Column(name = "date_debut", nullable = false)
-    private LocalDate date_debut;
+    private LocalDateTime date_debut;
 
     @Column(name = "date_fin", nullable = false)
-    private LocalDate date_fin;
+    private LocalDateTime date_fin;
 
     @Column(name = "lieu", columnDefinition = "TEXT")
     private String lieu;
@@ -50,9 +49,9 @@ public class Evenement {
     @Column(name = "valide")
     private boolean valide;
 
-    @Column(name = "orgaId", nullable = false)
+    @Column(name = "orga_id", nullable = false)
     private Integer orgaId;
 
-    @Column(name = "adminId")
+    @Column(name = "admin_id")
     private Integer adminId;
 }

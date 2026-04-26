@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { LogoutButton } from "./LogoutButton";
 
 export const NavBarUser = () => {
     return (
@@ -11,7 +12,7 @@ export const NavBarUser = () => {
                 <div className="flex text-xl space-x-4">
                     <a href="/event">Mes évènements</a>
                     <a href="/profiles/x">Mon Compte</a>
-                    <a href="">Déconnexion</a>
+                     <LogoutButton />
                 </div>
             </div>
             <div className="h-[1px] bg-black"></div>

@@ -6,8 +6,8 @@ import {NavBarUser} from "@/ui/nav-bar/nav-bar-user";
 import {NavBarNotConnected} from "@/ui/nav-bar/nav-bar-not-connected";
 import {getUserStatus} from "@/services/client";
 
-export const NavBar = async () => {
-    const status= await getUserStatus();
+export const NavBar = () => {
+    const status= getUserStatus();
     return (
         <>
             {status === "admin" && <NavBarAdmin/>}

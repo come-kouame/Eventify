@@ -1,8 +1,6 @@
-"use client";
-
 import {NavBar} from "@/ui/nav-bar/nav-bar"
 import {Calendar} from "@/ui/calendar/calendar";
-import {EventPresentation} from "@/ui/event/event-presentation";
+import {BlocEvenements} from "@/ui/event/bloc-evenements"
 import {Hello} from "@/ui/message/hello";
 
 export default function Home() {
@@ -18,18 +16,7 @@ export default function Home() {
                 </div>
 
                 {/* Event */}
-                <div className="flex-1 flex justify-center">
-                    <EventPresentation
-                        title="Titre de l’événement"
-                        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit..."
-                        date="Jeudi 19 Novembre 2014"
-                        location="Lieu"
-                        price={9}
-                        image={null}
-                        place_init={100}
-                        place_current={42}
-                    />
-                </div>
+                <BlocEvenements/>
             </main>
             <Hello/>
 
