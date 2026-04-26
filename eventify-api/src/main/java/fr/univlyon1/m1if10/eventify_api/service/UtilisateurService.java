@@ -96,7 +96,7 @@ public class UtilisateurService {
 
     HttpSession session = request.getSession(true);
     session.setAttribute("userId", user.getId());
-    session.setAttribute("login", user.getLogin());
+    session.setAttribute("email", user.getLogin());
     session.setAttribute("role", roleService.getRole(user.getId()));
 
     AuthResponseDTO res = new AuthResponseDTO();
