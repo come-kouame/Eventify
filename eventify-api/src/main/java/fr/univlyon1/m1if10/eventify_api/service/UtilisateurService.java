@@ -114,9 +114,9 @@ public class UtilisateurService {
             AuthResponseDTO res = new AuthResponseDTO();
             res.setEmail(user.getEmail());
             return res;
-  
-}
-    public Utilisateur getCurrentUser(HttpServletRequest request) {
+    }
+
+    public UtilisateurDTO getCurrentUserDTO(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
         if (session == null) {
@@ -125,11 +125,13 @@ public class UtilisateurService {
 
         Integer userId = (Integer) session.getAttribute("userId");
 
-        return repository.findById(userId)
+        Utilisateur user = repository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.UNAUTHORIZED,
                         "Session invalide"
                 ));
+
+        return toDTO(user);
     }
 
     private UtilisateurDTO toDTO(Utilisateur u) {
