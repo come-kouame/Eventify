@@ -36,7 +36,7 @@ export function FormConnexion() {
             const data = JSON.parse(text);
             console.log("Connexion réussie :", data);
 
-            window.location.href = "/";
+            // window.location.href = "/";
         } catch (err) {
             setError("Email ou mot de passe incorrect");
         }

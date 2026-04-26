@@ -33,6 +33,7 @@ export default function EventPage({params,}: {
                         startDate={null}
                         endDate={null}
                         onSelectDate={() => {}}
+                        currentEventDate={eventDate}
                         className="w-full"
                     />
 
@@ -48,6 +49,18 @@ export default function EventPage({params,}: {
                         <div>
                             <p className="text-xl font-bold">Places restantes</p>
                             <p>{event.nb_places - event.nb_places_vendues}</p>
+                        </div>
+                        <div>
+                            <p className="text-xl font-bold">Heure</p>
+                            <p>
+                                {new Date(event.date_debut).toLocaleTimeString("fr-FR", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                })} - {new Date(event.date_fin).toLocaleTimeString("fr-FR", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                            })}
+                            </p>
                         </div>
                     </div>
                 </div>

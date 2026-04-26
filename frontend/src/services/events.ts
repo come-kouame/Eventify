@@ -38,3 +38,20 @@ export async function getEventByID(id: number): Promise<Event> {
     const data: Event = await res.json();
     return data;
 }
+
+export async function createEvent(eventPayload: Partial<Event>) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(eventPayload),
+    });
+
+
+    if (!res.ok) {
+        throw new Error(`Erreur ${res.status}`);
+    }
+
+    return await res.json();
+}
