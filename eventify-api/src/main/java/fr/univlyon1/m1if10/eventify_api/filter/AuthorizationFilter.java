@@ -17,7 +17,6 @@ import java.util.Optional;
 
 @Component
 @Order(2)
-@WebFilter
 public class AuthorizationFilter extends HttpFilter {
 
     private final EvenementRepository evenementRepository;

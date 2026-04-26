@@ -14,7 +14,6 @@ import java.io.IOException;
 
 @Component
 @Order(1)
-@WebFilter
 public class AuthenticationFilter extends HttpFilter {
 
     @Override
