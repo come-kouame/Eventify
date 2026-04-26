@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Optional;
-
+/*
 @Component
 @Order(2)
 public class AuthorizationFilter extends HttpFilter {
@@ -108,3 +108,4 @@ public class AuthorizationFilter extends HttpFilter {
         chain.doFilter(request, response);
     }
 }
+*/

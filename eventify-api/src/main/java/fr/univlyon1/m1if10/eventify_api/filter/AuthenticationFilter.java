@@ -11,7 +11,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-
+/*
 @Component
 @Order(1)
 public class AuthenticationFilter extends HttpFilter {
@@ -36,3 +36,4 @@ public class AuthenticationFilter extends HttpFilter {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Vous devez être connecté.");
     }
 }
+*/
