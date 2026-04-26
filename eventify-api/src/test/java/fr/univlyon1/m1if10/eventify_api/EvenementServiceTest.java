@@ -21,8 +21,8 @@ public class EvenementServiceTest {
         EvenementDTO dto = new EvenementDTO();
         dto.setTitre("Concert");
         dto.setDescription("Description test");
-        dto.setDate_debut(java.time.LocalDate.now());
-        dto.setDate_fin(java.time.LocalDate.now().plusDays(1));
+        dto.setDate_debut(java.time.LocalDateTime.now());
+        dto.setDate_fin(java.time.LocalDateTime.now().plusDays(1));
         dto.setLieu("Lyon");
         dto.setAdresse("10 rue test");
         dto.setPoster("poster.png");
@@ -36,8 +36,8 @@ public class EvenementServiceTest {
         saved.setId(1);
         saved.setTitre("Concert");
         saved.setDescription("Description test");
-        saved.setDate_debut(java.time.LocalDate.now());
-        saved.setDate_fin(java.time.LocalDate.now().plusDays(1));
+        saved.setDate_debut(java.time.LocalDateTime.now());
+        saved.setDate_fin(java.time.LocalDateTime.now().plusDays(1));
         saved.setLieu("Lyon");
         saved.setAdresse("10 rue test");
         saved.setPoster("poster.png");
@@ -68,8 +68,8 @@ public class EvenementServiceTest {
         evenement.setId(1);
         evenement.setTitre("Concert");
         evenement.setDescription("Description test");
-        evenement.setDate_debut(java.time.LocalDate.now());
-        evenement.setDate_fin(java.time.LocalDate.now().plusDays(1));
+        evenement.setDate_debut(java.time.LocalDateTime.now());
+        evenement.setDate_fin(java.time.LocalDateTime.now().plusDays(1));
         evenement.setLieu("Lyon");
         evenement.setAdresse("10 rue test");
         evenement.setPoster("poster.png");
@@ -118,8 +118,8 @@ public class EvenementServiceTest {
         EvenementDTO dto = new EvenementDTO();
         dto.setTitre("Nouveau titre");
         dto.setDescription("Nouvelle description");
-        dto.setDate_debut(java.time.LocalDate.now());
-        dto.setDate_fin(java.time.LocalDate.now().plusDays(1));
+        dto.setDate_debut(java.time.LocalDateTime.now());
+        dto.setDate_fin(java.time.LocalDateTime.now().plusDays(1));
         dto.setLieu("Paris");
         dto.setAdresse("20 rue test");
         dto.setPoster("newposter.png");

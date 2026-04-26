@@ -60,7 +60,7 @@ public class UtilisateurServiceTest {
         user.setId(1);
         user.setNom("Dupont");
         user.setPrenom("Jean");
-        user.setLogin("jdupont");
+        user.setEmail("jdupont@test.com");
 
         Mockito.when(repository.findById(1)).thenReturn(Optional.of(user));
 
@@ -95,7 +95,6 @@ public class UtilisateurServiceTest {
         UtilisateurCreateDTO dto = new UtilisateurCreateDTO();
         dto.setNom("Martin");
         dto.setPrenom("Alice");
-        dto.setLogin("amartin");
         dto.setEmail("alice@test.com");
         dto.setMdp("password123");
         dto.setDateNaissance(LocalDate.of(1995, 5, 15));
@@ -104,11 +103,9 @@ public class UtilisateurServiceTest {
         savedUser.setId(2);
         savedUser.setNom("Martin");
         savedUser.setPrenom("Alice");
-        savedUser.setLogin("amartin");
         savedUser.setEmail("alice@test.com");
 
         Mockito.when(repository.existsByEmail("alice@test.com")).thenReturn(false);
-        Mockito.when(repository.existsByLogin("amartin")).thenReturn(false);
         Mockito.when(passwordEncoder.encode("password123")).thenReturn("encodedPassword123");
         Mockito.when(repository.save(Mockito.any(Utilisateur.class))).thenReturn(savedUser);
 
@@ -116,7 +113,7 @@ public class UtilisateurServiceTest {
 
         assertEquals(2, result.getId());
         assertEquals("Martin", result.getNom());
-        assertEquals("amartin", result.getLogin());
+        assertEquals("alice@test.com", result.getEmail());
         Mockito.verify(repository, Mockito.times(1)).save(Mockito.any(Utilisateur.class));
     }
 
@@ -142,25 +139,46 @@ public class UtilisateurServiceTest {
     }
 
     @Test
-    void testCreateUtilisateurLoginConflict() {
+    void testEditUtilisateurSuccess() {
         UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
         PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
         RoleService roleService = Mockito.mock(RoleService.class);
         UtilisateurService service = new UtilisateurService(repository, passwordEncoder, roleService);
 
         UtilisateurCreateDTO dto = new UtilisateurCreateDTO();
-        dto.setEmail("new@test.com");
-        dto.setLogin("existlogin");
+        dto.setNom("Martin Modif");
+        dto.setPrenom("Alice");
+        dto.setEmail("alice2@test.com");
+        dto.setMdp("newpassword123");
+        dto.setDateNaissance(LocalDate.of(1995, 5, 15));
 
-        Mockito.when(repository.existsByEmail("new@test.com")).thenReturn(false);
-        Mockito.when(repository.existsByLogin("existlogin")).thenReturn(true);
+        Utilisateur existingUser = new Utilisateur();
+        existingUser.setId(1);
+        existingUser.setNom("Martin");
+        existingUser.setEmail("alice@test.com");
 
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
-            service.createUtilisateur(dto);
+        Mockito.when(repository.findById(1)).thenReturn(Optional.of(existingUser));
+        Mockito.when(passwordEncoder.encode("newpassword123")).thenReturn("newEncoded");
+        Mockito.when(repository.save(Mockito.any(Utilisateur.class))).thenAnswer(i -> i.getArguments()[0]);
+
+        UtilisateurDTO result = service.editUtilisateur(1, dto);
+
+        assertEquals("Martin Modif", result.getNom());
+        assertEquals("alice2@test.com", result.getEmail());
+    }
+
+    @Test
+    void testEditUtilisateurNotFound() {
+        UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
+        PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
+        RoleService roleService = Mockito.mock(RoleService.class);
+        UtilisateurService service = new UtilisateurService(repository, passwordEncoder, roleService);
+
+        Mockito.when(repository.findById(99)).thenReturn(Optional.empty());
+
+        assertThrows(ResponseStatusException.class, () -> {
+            service.editUtilisateur(99, new UtilisateurCreateDTO());
         });
-        
-        assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
-        assertTrue(exception.getReason().contains("Login déjà utilisé"));
     }
 
     @Test
@@ -210,24 +228,24 @@ public class UtilisateurServiceTest {
         HttpSession session = Mockito.mock(HttpSession.class);
 
         LoginDTO dto = new LoginDTO();
-        dto.setLogin("jdupont");
+        dto.setEmail("jdupont@test.com");
         dto.setMdp("password123");
 
         Utilisateur user = new Utilisateur();
         user.setId(1);
-        user.setLogin("jdupont");
+        user.setEmail("jdupont@test.com");
         user.setMdp("encodedPassword");
 
-        Mockito.when(repository.findByLogin("jdupont")).thenReturn(Optional.of(user));
+        Mockito.when(repository.findByEmail("jdupont@test.com")).thenReturn(Optional.of(user));
         Mockito.when(passwordEncoder.matches("password123", "encodedPassword")).thenReturn(true);
         Mockito.when(request.getSession(true)).thenReturn(session);
         Mockito.when(roleService.getRole(1)).thenReturn("USER");
 
         AuthResponseDTO response = service.login(dto, request);
 
-        assertEquals("jdupont", response.getLogin());
+        assertEquals("jdupont@test.com", response.getEmail());
         Mockito.verify(session).setAttribute("userId", 1);
-        Mockito.verify(session).setAttribute("login", "jdupont");
+        Mockito.verify(session).setAttribute("email", "jdupont@test.com");
         Mockito.verify(session).setAttribute("role", "USER");
     }
 
@@ -241,15 +259,15 @@ public class UtilisateurServiceTest {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 
         LoginDTO dto = new LoginDTO();
-        dto.setLogin("jdupont");
+        dto.setEmail("jdupont@test.com");
         dto.setMdp("wrongpassword");
 
         Utilisateur user = new Utilisateur();
         user.setId(1);
-        user.setLogin("jdupont");
+        user.setEmail("jdupont@test.com");
         user.setMdp("encodedPassword");
 
-        Mockito.when(repository.findByLogin("jdupont")).thenReturn(Optional.of(user));
+        Mockito.when(repository.findByEmail("jdupont@test.com")).thenReturn(Optional.of(user));
         Mockito.when(passwordEncoder.matches("wrongpassword", "encodedPassword")).thenReturn(false);
 
         assertThrows(ResponseStatusException.class, () -> {
@@ -258,7 +276,7 @@ public class UtilisateurServiceTest {
     }
 
     @Test
-    void testLoginInvalidUsername() {
+    void testLoginInvalidEmail() {
         UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
         PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
         RoleService roleService = Mockito.mock(RoleService.class);
@@ -267,10 +285,10 @@ public class UtilisateurServiceTest {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 
         LoginDTO dto = new LoginDTO();
-        dto.setLogin("unknown");
+        dto.setEmail("unknown@test.com");
         dto.setMdp("password123");
 
-        Mockito.when(repository.findByLogin("unknown")).thenReturn(Optional.empty());
+        Mockito.when(repository.findByEmail("unknown@test.com")).thenReturn(Optional.empty());
 
         assertThrows(ResponseStatusException.class, () -> {
             service.login(dto, request);
@@ -296,7 +314,7 @@ public class UtilisateurServiceTest {
 
         Mockito.when(repository.findById(1)).thenReturn(Optional.of(user));
 
-        Utilisateur result = service.getCurrentUser(request);
+        UtilisateurDTO result = service.getCurrentUserDTO(request);
 
         assertEquals(1, result.getId());
         assertEquals("Connecté", result.getNom());
@@ -315,7 +333,7 @@ public class UtilisateurServiceTest {
         Mockito.when(request.getSession(false)).thenReturn(null);
 
         assertThrows(ResponseStatusException.class, () -> {
-            service.getCurrentUser(request);
+            service.getCurrentUserDTO(request);
         });
     }
 }
