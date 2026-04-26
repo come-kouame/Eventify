@@ -1,5 +1,5 @@
 import Image from "next/image";
-
+import { LogoutButton } from "./LogoutButton";
 export const NavBarOrga = () => {
     return (
         <>
@@ -12,7 +12,7 @@ export const NavBarOrga = () => {
                     <a href="/event/create">Créer un évènement</a>
                     <a href="/event">Mes évènements</a>
                     <a href="/profiles/x">Mon Compte</a>
-                    <a href="">Déconnexion</a>
+                     <LogoutButton />
                 </div>
             </div>
             <div className="h-[1px] bg-black"></div>

@@ -37,6 +37,12 @@ public class UtilisateurController {
         return service.createUtilisateur(dto);
     }
 
+    // Modifier un utilisateur existant
+    @PutMapping
+    public UtilisateurDTO editUtilisateur(@PathVariable Integer id, @RequestBody UtilisateurCreateDTO dto) {
+        return service.editUtilisateur(id, dto);
+    }
+
     // Supprimer un utilisateur par son ID
     @DeleteMapping("/{id}")
     public void deleteUtilisateur(@PathVariable Integer id) {

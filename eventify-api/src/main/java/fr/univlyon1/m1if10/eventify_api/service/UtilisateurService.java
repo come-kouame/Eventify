@@ -4,6 +4,7 @@ import fr.univlyon1.m1if10.eventify_api.dto.AuthResponseDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.LoginDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurCreateDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurDTO;
+import fr.univlyon1.m1if10.eventify_api.entity.Evenement;
 import fr.univlyon1.m1if10.eventify_api.entity.Utilisateur;
 import fr.univlyon1.m1if10.eventify_api.repository.UtilisateurRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,9 +46,6 @@ public class UtilisateurService {
         if (repository.existsByEmail(dto.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email déjà utilisé");
         }
-        if (repository.existsByLogin(dto.getLogin())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Login déjà utilisé");
-        }
         Utilisateur u = new Utilisateur();
         u.setNom(dto.getNom());
         u.setPrenom(dto.getPrenom());
@@ -56,10 +54,24 @@ public class UtilisateurService {
         u.setVille(dto.getVille());
         u.setRue(dto.getRue());
         u.setCodePostal(dto.getCodePostal());
-        u.setLogin(dto.getLogin());
         u.setMdp(passwordEncoder.encode(dto.getMdp()));
         Utilisateur saved = repository.save(u);
         return toDTO(saved);
+    }
+
+    public UtilisateurDTO editUtilisateur(Integer id, UtilisateurCreateDTO dto) {
+        Utilisateur u = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur non trouvé"));
+        u.setNom(dto.getNom());
+        u.setPrenom(dto.getPrenom());
+        u.setDateNaissance(dto.getDateNaissance());
+        u.setEmail(dto.getEmail());
+        u.setVille(dto.getVille());
+        u.setRue(dto.getRue());
+        u.setCodePostal(dto.getCodePostal());
+        u.setMdp(passwordEncoder.encode(dto.getMdp()));
+        Utilisateur updated = repository.save(u);
+        return toDTO(updated);
     }
 
     public void deleteUtilisateur(Integer id) {
@@ -69,28 +81,40 @@ public class UtilisateurService {
     }
 
     public AuthResponseDTO login(LoginDTO dto, HttpServletRequest request) {
-        Utilisateur user = repository.findByLogin(dto.getLogin())
-                .orElseThrow(() -> new ResponseStatusException(
+    System.out.println("Email recu  = " + dto.getEmail());
+    System.out.println("mdp recu = " + dto.getMdp());
+
+    Utilisateur user = repository.findByEmail(dto.getEmail())
+            .orElseThrow(() -> {
+                System.out.println("no user avec cet email");
+                return new ResponseStatusException(
                         HttpStatus.UNAUTHORIZED,
                         "Identifiants invalides"
-                ));
+                );
+            });
 
-        if (!passwordEncoder.matches(dto.getMdp(), user.getMdp())) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNAUTHORIZED,
-                    "Identifiants invalides"
-            );
-        }
+    System.out.println("User existe = " + user.getEmail());
+    System.out.println("mdp BD = " + user.getMdp());
+
+    if (!dto.getMdp().equals(user.getMdp())) {
+        System.out.println("Mdp incorrect");
+        throw new ResponseStatusException(
+                HttpStatus.UNAUTHORIZED,
+                "Identifiants invalides"
+        );
+          }
+
+    System.out.println("MDP OK");
 
         HttpSession session = request.getSession(true);
         session.setAttribute("userId", user.getId());
-        session.setAttribute("login", user.getLogin());
+        session.setAttribute("email", user.getEmail());
         session.setAttribute("role", roleService.getRole(user.getId()));
         AuthResponseDTO res = new AuthResponseDTO();
-        res.setLogin(user.getLogin());
+        res.setEmail(user.getEmail());
         return res;
-    }
-
+  
+}
     public Utilisateur getCurrentUser(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
@@ -117,7 +141,6 @@ public class UtilisateurService {
         dto.setVille(u.getVille());
         dto.setRue(u.getRue());
         dto.setCodePostal(u.getCodePostal());
-        dto.setLogin(u.getLogin());
         return dto;
     }
 }
