@@ -11,7 +11,7 @@ export function FormConnexion() {
     e.preventDefault();
 
         try {
-            const res = await fetch("http://localhost:8080/auth/login", {
+            const res = await fetch("https://192.168.75.28/api/eventify/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
