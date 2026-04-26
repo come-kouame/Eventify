@@ -17,5 +17,4 @@ public class UtilisateurDTO {
     private String ville;
     private String rue;
     private String codePostal;
-    private String login;
 }
