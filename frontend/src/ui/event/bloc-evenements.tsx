@@ -18,14 +18,15 @@ export const BlocEvenements = () => {
             {data.map((event) => (
                 <EventPresentation
                     key={event.id}
+                    id={event.id}
                     title={event.titre}
                     description={event.description}
-                    date={event.date}
-                    location="Lieu"
+                    date={event.date_debut}
+                    location={event.lieu}
                     price={event.prix}
-                    image={null}
-                    place_init={100}
-                    place_current={42}
+                    image={event.poster}
+                    place_init={event.nb_places}
+                    place_current={event.nb_places - event.nb_places_vendues}
                 />
             ))}
         </div>

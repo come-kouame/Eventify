@@ -1,4 +1,5 @@
 interface Props {
+    id: number;
     title : string;
     description : string;
     date : string;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export const EventPresentation = ({
+    id,
     title,
     description,
     date,
@@ -66,7 +68,7 @@ export const EventPresentation = ({
                     <div className="w-1/3 bg-gray-400 py-3">
                         {place_current} places restantes
                     </div>
-                    <a href="/event/x" className="w-1/3 bg-gray-300 py-3 cursor-pointer hover:bg-gray-500 hover:text-white transition block">
+                    <a href={`/event/${id}`} className="w-1/3 bg-gray-300 py-3 cursor-pointer hover:bg-gray-500 hover:text-white transition block">
                         Réserver
                     </a>
                 </div>
