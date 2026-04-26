@@ -81,27 +81,37 @@ public class UtilisateurService {
     }
 
     public AuthResponseDTO login(LoginDTO dto, HttpServletRequest request) {
-    Utilisateur user = repository.findByEmail(dto.getEmail())
-            .orElseThrow(() -> {
-                return new ResponseStatusException(
-                        HttpStatus.UNAUTHORIZED,
-                        "Identifiants invalides"
-                );
-            });
-    if (!passwordEncoder.matches(dto.getMdp(), user.getMdp())) {
-        throw new ResponseStatusException(
-                HttpStatus.UNAUTHORIZED,
-                "Identifiants invalides"
-        );
-          }
+        System.out.println("EMAIL DTO = " + dto.getEmail());
+        System.out.println("MDP DTO = " + dto.getMdp());
+        Utilisateur user = repository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> {
+                    return new ResponseStatusException(
+                            HttpStatus.UNAUTHORIZED,
+                            "Identifiants invalides"
+                    );
+                });
 
-        HttpSession session = request.getSession(true);
-        session.setAttribute("userId", user.getId());
-        session.setAttribute("email", user.getEmail());
-        session.setAttribute("role", roleService.getRole(user.getId()));
-        AuthResponseDTO res = new AuthResponseDTO();
-        res.setEmail(user.getEmail());
-        return res;
+        System.out.println("USER TROUVE = " + user.getEmail());
+        System.out.println("MDP DB = " + user.getMdp());
+
+        boolean match = passwordEncoder.matches(dto.getMdp(), user.getMdp());
+        System.out.println("PASSWORD MATCH = " + match);
+
+        if (!passwordEncoder.matches(dto.getMdp(), user.getMdp())) {
+            System.out.println("PASSWORD INCORRECT");
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Identifiants invalides"
+            );
+              }
+
+            HttpSession session = request.getSession(true);
+            session.setAttribute("userId", user.getId());
+            session.setAttribute("email", user.getEmail());
+            session.setAttribute("role", roleService.getRole(user.getId()));
+            AuthResponseDTO res = new AuthResponseDTO();
+            res.setEmail(user.getEmail());
+            return res;
   
 }
     public Utilisateur getCurrentUser(HttpServletRequest request) {
