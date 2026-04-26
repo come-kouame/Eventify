@@ -81,30 +81,19 @@ public class UtilisateurService {
     }
 
     public AuthResponseDTO login(LoginDTO dto, HttpServletRequest request) {
-    System.out.println("Email recu  = " + dto.getEmail());
-    System.out.println("mdp recu = " + dto.getMdp());
-
     Utilisateur user = repository.findByEmail(dto.getEmail())
             .orElseThrow(() -> {
-                System.out.println("no user avec cet email");
                 return new ResponseStatusException(
                         HttpStatus.UNAUTHORIZED,
                         "Identifiants invalides"
                 );
             });
-
-    System.out.println("User existe = " + user.getEmail());
-    System.out.println("mdp BD = " + user.getMdp());
-
-    if (!dto.getMdp().equals(user.getMdp())) {
-        System.out.println("Mdp incorrect");
+    if (!passwordEncoder.matches(dto.getMdp(), user.getMdp())) {
         throw new ResponseStatusException(
                 HttpStatus.UNAUTHORIZED,
                 "Identifiants invalides"
         );
           }
-
-    System.out.println("MDP OK");
 
         HttpSession session = request.getSession(true);
         session.setAttribute("userId", user.getId());
