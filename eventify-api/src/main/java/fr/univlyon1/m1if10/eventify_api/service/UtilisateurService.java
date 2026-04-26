@@ -81,6 +81,8 @@ public class UtilisateurService {
     }
 
     public AuthResponseDTO login(LoginDTO dto, HttpServletRequest request) {
+
+        System.out.println("DTO RECU = " + dto);
         System.out.println("EMAIL DTO = " + dto.getEmail());
         System.out.println("MDP DTO = " + dto.getMdp());
         Utilisateur user = repository.findByEmail(dto.getEmail())
