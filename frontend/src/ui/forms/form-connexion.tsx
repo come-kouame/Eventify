@@ -16,7 +16,6 @@ export function FormConnexion() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                credentials: "include",
                 body: JSON.stringify({
                     email: email,
                     mdp: mdp,

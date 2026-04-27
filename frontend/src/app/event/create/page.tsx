@@ -5,6 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import {NavBar} from "@/ui/nav-bar/nav-bar";
 import { createEvent } from "@/services/events";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
     const eventDate = new Date(2026, 4, 29);
@@ -20,6 +21,8 @@ export default function Home() {
     const [posterFile, setPosterFile] = useState<File | null>(null);
     const [posterPreview, setPosterPreview] = useState("");
     const [calendarMonth, setCalendarMonth] = useState(eventDate);
+
+    const router = useRouter();
 
     // Helper function for date/time conversion
     const buildDateTime = (baseDate: Date, time: string) => {
@@ -56,6 +59,7 @@ export default function Home() {
         try {
             const data = await createEvent(eventPayload);
             console.log("Event created:", data);
+            router.push("/event");
         } catch (err) {
             console.error("Create event error:", err);
         }

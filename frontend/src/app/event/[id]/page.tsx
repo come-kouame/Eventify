@@ -2,13 +2,34 @@
 
 import { Calendar } from "@/ui/calendar/calendar";
 import { NavBar } from "@/ui/nav-bar/nav-bar";
-import { getEventByID, Event } from "@/services/events";
+import { getEventByID, Event, registerEvent } from "@/services/events";
 import { useEffect, useState, use } from "react";
+import { useRouter } from "next/navigation";
+import {getMe, Utilisateur} from "@/services/user";
 export default function EventPage({params,}: {
     params: Promise<{ id: string }>;
 }) {
     const { id } = use(params);
     const [event, setEvent] = useState<Event | null>(null);
+    const router = useRouter();
+
+    const [me, setMe] = useState<Utilisateur | null>(null);
+
+    useEffect(() => {
+        getMe()
+            .then(setMe)
+            .catch((err) => console.error("getMe error:", err));
+    }, []);
+
+    const handleRegister = async () => {
+        try {
+            const status = await registerEvent(Number(id), Number(me?.id));
+            router.push(`/register?status=${status}`);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     useEffect(() => {
         getEventByID(Number(id))
             .then(setEvent)
@@ -84,7 +105,10 @@ export default function EventPage({params,}: {
                         </p>
                     </div>
 
-                    <button className="bg-indigo-300 text-black text-3xl py-6 rounded-lg hover:bg-indigo-400">
+                    <button
+                        onClick={handleRegister}
+                        className="bg-indigo-300 text-black text-3xl py-6 rounded-lg hover:bg-indigo-400"
+                    >
                         Je m’inscris
                     </button>
                 </div>
