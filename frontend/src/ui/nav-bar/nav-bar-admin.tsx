@@ -1,19 +1,19 @@
-import Image from "next/image";
 import { LogoutButton } from "./LogoutButton";
+import Link from "next/link";
 export const NavBarAdmin = () => {
     return (
         <>
             <div className="flex items-center justify-between p-4 bg-gray-200">
-                <a href="/" className="font-bold text-5xl leading-tight">
+                <Link href="/" className="font-bold text-5xl leading-tight">
                     Eventify
-                </a>
+                </Link>
 
                 <div className="flex text-xl space-x-4">
-                    <a href="/event/create">Créer un évènement</a>
-                    <a href="/event">Gérer les évènements</a>
-                    <a href="/profiles">Gérer les comptes</a>
-                    <a href="/event">Mes évènements</a>
-                    <a href="/profiles/x">Mon Compte</a>
+                    <Link href="/event/create">Créer un évènement</Link>
+                    <Link href="/event/manage">Gérer les évènements</Link>
+                    <Link href="/profiles">Gérer les comptes</Link>
+                    <Link href="/event">Mes évènements</Link>
+                    <Link href="/profiles/x">Mon Compte</Link>
                      <LogoutButton />
                 </div>
             </div>
