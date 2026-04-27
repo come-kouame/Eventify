@@ -68,7 +68,6 @@ export async function createEvent(eventPayload: Partial<Event>) {
 }
 
 export async function valideEvent(id: number, eventPayload: Partial<Event>) {
-    // 1. Update event first
     const updateRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements/${id}`, {
         method: "PUT",
         headers: {
@@ -81,21 +80,7 @@ export async function valideEvent(id: number, eventPayload: Partial<Event>) {
         throw new Error(`Erreur update ${updateRes.status}`);
     }
 
-    // 2. Validate event
-    const validateRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements/${id}/validate`, {
-        method: "PUT",
-    });
-
-    if (!validateRes.ok) {
-        throw new Error(`Erreur validate ${validateRes.status}`);
-    }
-
-    if (validateRes.status === 204) {
-        return null;
-    }
-
-    const text = await validateRes.text();
-    return text ? JSON.parse(text) : null;
+    return await updateRes.json();
 }
 
 export async function deleteEvent(id: number) {

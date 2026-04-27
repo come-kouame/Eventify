@@ -86,6 +86,7 @@ export default function Home({ params }: { params: Promise<{ id: string }> }) {
         try {
             console.log(JSON.stringify(eventPayload));
             await valideEvent(Number(id), eventPayload);
+            router.push("/event/manage");
         } catch (err) {
             console.error("Validate event error:", err);
         }
