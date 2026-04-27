@@ -28,6 +28,17 @@ export async function getAllEvents(): Promise<Event[]> {
     return data;
 }
 
+export async function getAllValidEvents(): Promise<Event[]> {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements/valides`);
+
+    if (!res.ok) {
+        throw new Error(`Erreur ${res.status}`);
+    }
+
+    const data: Event[] = await res.json();
+    return data;
+}
+
 export async function getEventByID(id: number): Promise<Event> {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements/${id}`);
 
@@ -54,4 +65,52 @@ export async function createEvent(eventPayload: Partial<Event>) {
     }
 
     return await res.json();
+}
+
+export async function valideEvent(id: number, eventPayload: Partial<Event>) {
+    // 1. Update event first
+    const updateRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(eventPayload),
+    });
+
+    if (!updateRes.ok) {
+        throw new Error(`Erreur update ${updateRes.status}`);
+    }
+
+    // 2. Validate event
+    const validateRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements/${id}/validate`, {
+        method: "PUT",
+    });
+
+    if (!validateRes.ok) {
+        throw new Error(`Erreur validate ${validateRes.status}`);
+    }
+
+    if (validateRes.status === 204) {
+        return null;
+    }
+
+    const text = await validateRes.text();
+    return text ? JSON.parse(text) : null;
+}
+
+export async function deleteEvent(id: number) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements/${id}`, {
+        method: "DELETE",
+    });
+
+    if (!res.ok) {
+        throw new Error(`Erreur ${res.status}`);
+    }
+
+    if (res.status === 204) {
+        return null;
+    }
+
+    const text = await res.text();
+    return text ? JSON.parse(text) : null;
 }

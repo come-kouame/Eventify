@@ -1,13 +1,13 @@
 "use client";
 import {EventPresentation} from "@/ui/event/event-presentation";
-import {getAllEvents, Event} from "@/services/events";
+import {getAllValidEvents, Event} from "@/services/events";
 import {useEffect, useState} from "react";
 
 export const BlocEvenements = () => {
     const [data, setData] = useState<Event[]>([]);
 
     useEffect(() => {
-        getAllEvents()
+        getAllValidEvents()
             .then(setData)
             .catch(console.error);
     }, []);
