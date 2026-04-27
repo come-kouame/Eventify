@@ -29,6 +29,15 @@ export const EventPresentation = ({
         priceText = "À partir de " + price.toFixed(2) + "€";
     }
 
+    const formattedDate = new Date(date).toLocaleString("fr-FR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Europe/Paris",
+    });
+
     return (
         <div className="flex w-full bg-gray-200 rounded-lg overflow-hidden shadow">
             {/* Image */}
@@ -50,7 +59,7 @@ export const EventPresentation = ({
                     <div className="flex justify-between items-start">
                         <div>
                             <h2 className="text-2xl font-bold">{title}</h2>
-                            <p className="text-sm text-gray-700 ml-3">{date}</p>
+                            <p className="text-sm text-gray-700 ml-3">{formattedDate}</p>
                         </div>
                         <p className="text-sm font-semibold">{priceText}</p>
                     </div>
