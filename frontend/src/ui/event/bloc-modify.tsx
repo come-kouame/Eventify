@@ -27,6 +27,7 @@ export const BlocModify = () => {
                     image={event.poster}
                     place_init={event.nb_places}
                     place_current={event.nb_places - event.nb_places_vendues}
+                    admin_id={event.admin_id}
                 />
             ))}
         </div>

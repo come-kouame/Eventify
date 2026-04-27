@@ -65,26 +65,26 @@ export default function Home({ params }: { params: Promise<{ id: string }> }) {
     };
 
     const handleValidateEvent = async () => {
+        const dateDebut = buildDateTime(date, startTime);
+        const dateFin = buildDateTime(date, endTime);
+
+        const eventPayload = {
+            titre: name,
+            description,
+            date_debut: dateDebut.toISOString(),
+            date_fin: dateFin.toISOString(),
+            lieu: location,
+            adresse: "",
+            prix: Number(price),
+            nb_places: Number(seats),
+            poster: posterPreview,
+            nb_places_vendues: 0,
+            valide: true,
+            orga_id: 1,
+            admin_id: 1,
+        };
         try {
-            const dateDebut = buildDateTime(date, startTime);
-            const dateFin = buildDateTime(date, endTime);
-
-            const eventPayload = {
-                titre: name,
-                description,
-                date_debut: dateDebut.toISOString(),
-                date_fin: dateFin.toISOString(),
-                lieu: location,
-                prix: Number(price),
-                nb_places: Number(seats),
-                poster: posterPreview,
-                nb_places_vendues: 0,
-                valide: true,
-                orga_id: 1,
-                admin_id: 1,
-
-            };
-
+            console.log(JSON.stringify(eventPayload));
             await valideEvent(Number(id), eventPayload);
         } catch (err) {
             console.error("Validate event error:", err);

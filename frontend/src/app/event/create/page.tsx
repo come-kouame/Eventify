@@ -54,7 +54,6 @@ export default function Home() {
         };
 
         try {
-            console.log(JSON.stringify(eventPayload));
             const data = await createEvent(eventPayload);
             console.log("Event created:", data);
         } catch (err) {
