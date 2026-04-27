@@ -25,7 +25,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public void logout(HttpServletRequest request) {
-        request.getSession().invalidate();
+        service.logout(request);
     }
 
     @GetMapping("/me")

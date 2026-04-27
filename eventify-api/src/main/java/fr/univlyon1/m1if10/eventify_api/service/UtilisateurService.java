@@ -116,6 +116,13 @@ public class UtilisateurService {
             return res;
     }
 
+    public void logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+    }
+
     public UtilisateurDTO getCurrentUserDTO(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
