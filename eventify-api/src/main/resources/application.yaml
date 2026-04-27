@@ -11,11 +11,3 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
-server:
-  servlet:
-    session:
-      cookie:
-        same-site: none
-        secure: true
-        path: /
