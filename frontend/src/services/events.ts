@@ -18,7 +18,9 @@ export type Event = {
 };
 
 export async function getAllEvents(): Promise<Event[]> {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements`,{
+        //credentials: "include",
+    });
 
     if (!res.ok) {
         throw new Error(`Erreur ${res.status}`);
@@ -29,7 +31,9 @@ export async function getAllEvents(): Promise<Event[]> {
 }
 
 export async function getAllValidEvents(): Promise<Event[]> {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements/valides`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements/valides`,{
+        //credentials: "include",
+    });
 
     if (!res.ok) {
         throw new Error(`Erreur ${res.status}`);
@@ -40,7 +44,9 @@ export async function getAllValidEvents(): Promise<Event[]> {
 }
 
 export async function getEventByID(id: number): Promise<Event> {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements/${id}`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements/${id}`,{
+        //credentials: "include",
+    });
 
     if (!res.ok) {
         throw new Error(`Erreur ${res.status}`);
@@ -50,6 +56,33 @@ export async function getEventByID(id: number): Promise<Event> {
     return data;
 }
 
+export async function getEventByUser(id: number): Promise<Event[]> {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/participations`,{
+        //credentials: "include",
+    });
+
+    if (!res.ok) {
+        throw new Error(`Erreur ${res.status}`);
+    }
+
+    const data: Event = await res.json();
+    return data;
+}
+
+export async function registerEvent(id: number, userId: number) {
+    console.log(id);
+    console.log(userId);
+    const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/evenements/${id}/inscription?userId=${userId}`,
+        {
+            method: "PUT",
+        }
+    );
+
+
+    return res.status;
+}
+
 export async function createEvent(eventPayload: Partial<Event>) {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements`, {
         method: "POST",
@@ -57,6 +90,7 @@ export async function createEvent(eventPayload: Partial<Event>) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(eventPayload),
+        //credentials: "include",
     });
 
 
@@ -74,6 +108,7 @@ export async function valideEvent(id: number, eventPayload: Partial<Event>) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(eventPayload),
+        //credentials: "include",
     });
 
     if (!updateRes.ok) {
@@ -86,6 +121,7 @@ export async function valideEvent(id: number, eventPayload: Partial<Event>) {
 export async function deleteEvent(id: number) {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements/${id}`, {
         method: "DELETE",
+        //credentials: "include",
     });
 
     if (!res.ok) {

@@ -9,7 +9,9 @@ export type Utilisateur = {
 };
 
 export async function getAllUser(): Promise<Utilisateur[]> {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs`,{
+        //credentials: "include",
+    });
 
     if (!res.ok) {
         throw new Error(`Erreur ${res.status}`);
