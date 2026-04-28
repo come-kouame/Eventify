@@ -46,9 +46,7 @@ public class ParticipationService {
         evenementRepository.save(evenement);
 
         Participation p = new Participation();
-        Utilisateur u = utilisateurRepository.getReferenceById(utilisateurId);
-        p.setUtilisateur(u);
-        p.setUtilisateur(u);
+        p.setUtilisateur(utilisateurRepository.getReferenceById(utilisateurId));
         p.setEvenement(evenement);
 
         repository.save(p);
