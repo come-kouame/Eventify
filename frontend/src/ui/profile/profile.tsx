@@ -54,13 +54,31 @@ export const Profile = ({ user }: { user: any }) => {
                 <div className="flex items-center mt-8 text-xl space-x-6">
                     <span className="text-lg font-bold">Statut :</span>
                     <label className="flex items-center gap-2">
-                        <input type="radio" name="status" /> Administrateur
+                        <input
+                            type="radio"
+                            name="status"
+                            checked={user?.id_admin != null}
+                            readOnly
+                        />
+                        Administrateur
                     </label>
                     <label className="flex items-center gap-2">
-                        <input type="radio" name="status" /> Organisateur
+                        <input
+                            type="radio"
+                            name="status"
+                            checked={user?.id_admin == null && user?.id_orga != null}
+                            readOnly
+                        />
+                        Organisateur
                     </label>
                     <label className="flex items-center gap-2">
-                        <input type="radio" name="status" defaultChecked /> Participant
+                        <input
+                            type="radio"
+                            name="status"
+                            checked={user?.id_admin == null && user?.id_orga == null}
+                            readOnly
+                        />
+                        Utilisateur
                     </label>
                 </div>
 

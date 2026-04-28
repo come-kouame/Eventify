@@ -1,5 +1,7 @@
 export type Utilisateur = {
     id: number;
+    id_orga: number | null;
+    id_admin: number | null;
     nom: string;
     prenom: string;
     dateNaissance: string;
@@ -53,3 +55,9 @@ export async function getUserByID(id: number): Promise<Utilisateur> {
 
     return data;
 }
+
+export const getStatut = (user: Utilisateur) => {
+    if (user.id_admin != null) return "Administrateur";
+    if (user.id_orga != null) return "Organisateur";
+    return "Utilisateur";
+};
