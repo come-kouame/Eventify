@@ -71,8 +71,8 @@ export default function Home({ params }: { params: Promise<{ id: string }> }) {
         const eventPayload = {
             titre: name,
             description,
-            date_debut: dateDebut.toISOString(),
-            date_fin: dateFin.toISOString(),
+            date_debut: dateDebut.toLocaleString("sv-SE", { timeZone: "Europe/Paris" }).replace(" ", "T"),
+            date_fin: dateFin.toLocaleString("sv-SE", { timeZone: "Europe/Paris" }).replace(" ", "T"),
             lieu: location,
             adresse: "",
             prix: Number(price),
