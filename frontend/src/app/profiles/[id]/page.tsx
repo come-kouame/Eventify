@@ -1,17 +1,19 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { NavBar } from "@/ui/nav-bar/nav-bar";
-import { Profile } from "@/ui/profile/profile";
-import { getMe, modifyUser, Utilisateur } from "@/services/user";
+import { getStatut, getUserByID, modifyUser, setAdmin, setOrga, setUser, Utilisateur } from "@/services/user";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 export default function Home() {
+    const params = useParams();
+    const id = params.id;
     const [me, setMe] = useState<Utilisateur | null>(null);
     const [formData, setFormData] = useState<Omit<Utilisateur, "id" | "id_admin" | "id_orga"> | null>(null);
+    const [status, setStatus] = useState("Utilisateur");
 
     useEffect(() => {
-        getMe()
+        getUserByID(Number(id))
             .then((data) => {
                 setMe(data);
                 setFormData({
@@ -23,6 +25,7 @@ export default function Home() {
                     rue: data.rue,
                     codePostal: data.codePostal,
                 });
+                setStatus(getStatut(data));
             })
             .catch(console.error);
     }, []);
@@ -36,6 +39,14 @@ export default function Home() {
         try {
             const updated = await modifyUser(me.id, formData);
             setMe(updated);
+
+            if (status === "Administrateur") {
+                await setAdmin(me.id);
+            } else if (status === "Organisateur") {
+                await setOrga(me.id);
+            } else {
+                await setUser(me.id);
+            }
         } catch (error) {
             console.error(error);
         }
@@ -117,8 +128,12 @@ export default function Home() {
                                 />
                             </div>
                             <div>
-                                <label className="text-lg font-bold">Numéro de tel :</label>
-                                <input type="text" value="" readOnly className="w-full bg-white border border-zinc-300 rounded-md px-2 py-1 outline-none focus:ring-2 focus:ring-indigo-400" />
+                                <label className="text-lg font-bold">Date de naissance :</label>
+                                <input
+                                    type="date"
+                                    defaultValue={me?.dateNaissance}
+                                    className="w-full bg-white border border-zinc-300 rounded-md px-2 py-1 outline-none focus:ring-2 focus:ring-indigo-400"
+                                />
                             </div>
                         </div>
                     </div>
@@ -127,13 +142,13 @@ export default function Home() {
                     <div className="flex items-center mt-8 text-xl space-x-6">
                         <span className="text-lg font-bold">Statut :</span>
                         <label className="flex items-center gap-2">
-                            <input type="radio" name="status" /> Administrateur
+                            <input type="radio" name="status" checked={status === "Administrateur"} onChange={() => setStatus("Administrateur")} /> Administrateur
                         </label>
                         <label className="flex items-center gap-2">
-                            <input type="radio" name="status" /> Organisateur
+                            <input type="radio" name="status" checked={status === "Organisateur"} onChange={() => setStatus("Organisateur")} /> Organisateur
                         </label>
                         <label className="flex items-center gap-2">
-                            <input type="radio" name="status" defaultChecked /> Participant
+                            <input type="radio" name="status" checked={status === "Utilisateur"} onChange={() => setStatus("Utilisateur")} /> Utilisateur
                         </label>
                     </div>
 
