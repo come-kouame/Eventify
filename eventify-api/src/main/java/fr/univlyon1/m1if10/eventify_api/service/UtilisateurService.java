@@ -236,11 +236,10 @@ public class UtilisateurService {
             Organisateur orga = new Organisateur();
             orga.setUtilisateurId(id);
             organisateurRepository.save(orga);
-            Organisateur orga2 = organisateurRepository.findByUtilisateurId(id).get();
 
             Administrateur admin = new Administrateur();
             admin.setUtilisateurId(id);
-            admin.setOrganisateurId(orga2.getId());
+            admin.setOrganisateurId(orga.getId());
             administrateurRepository.save(admin);
         }
 
