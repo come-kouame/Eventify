@@ -49,7 +49,7 @@ public class UtilisateurController {
     // Modifier le mot de passe d'un utilisateur
     @PutMapping("/{id}/password")
     public void changePassword(@PathVariable Integer id, @RequestBody ChangePasswordDTO dto, HttpServletRequest request) {
-        service.changePassword(id, dto, request);
+        service.changePassword(id, dto);
     }
 
     @PutMapping("/{id}/set-to-organisateur")

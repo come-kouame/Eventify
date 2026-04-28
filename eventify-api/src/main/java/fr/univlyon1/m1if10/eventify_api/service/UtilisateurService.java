@@ -182,19 +182,7 @@ public class UtilisateurService {
         return dto;
     }
 
-    public void changePassword(Integer id, ChangePasswordDTO dto, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-
-        if (session == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non connecté");
-        }
-
-        Integer currentUserId = (Integer) session.getAttribute("userId");
-
-        if (!currentUserId.equals(id)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Accès interdit");
-        }
-
+    public void changePassword(Integer id, ChangePasswordDTO dto) {
         Utilisateur user = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
