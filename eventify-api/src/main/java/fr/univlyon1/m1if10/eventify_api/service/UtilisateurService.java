@@ -219,10 +219,9 @@ public class UtilisateurService {
             return;
         }
 
-        Optional<Organisateur> orgaOpt = organisateurRepository.findByUtilisateurId(id);
 
-        if (orgaOpt.isPresent()) {
-            Organisateur orga = orgaOpt.get();
+        if (organisateurRepository.existsByUtilisateurId(id)) {
+            Organisateur orga = organisateurRepository.findByUtilisateurId(id).get();
 
             Administrateur admin = new Administrateur();
             admin.setUtilisateurId(id);
