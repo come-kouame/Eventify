@@ -1,9 +1,11 @@
 package fr.univlyon1.m1if10.eventify_api.controller;
 
+import fr.univlyon1.m1if10.eventify_api.dto.ChangePasswordDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurCreateDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurDTO;
 import fr.univlyon1.m1if10.eventify_api.entity.Utilisateur;
 import fr.univlyon1.m1if10.eventify_api.service.UtilisateurService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,6 +43,12 @@ public class UtilisateurController {
     @PutMapping("/{id}")
     public UtilisateurDTO editUtilisateur(@PathVariable Integer id, @RequestBody UtilisateurCreateDTO dto) {
         return service.editUtilisateur(id, dto);
+    }
+
+    // Modifier le mot de passe d'un utilisateur
+    @PutMapping("/{id}/password")
+    public void changePassword(@PathVariable Integer id, @RequestBody ChangePasswordDTO dto, HttpServletRequest request) {
+        service.changePassword(id, dto, request);
     }
 
     @PutMapping("/{id}/set-to-organisateur")

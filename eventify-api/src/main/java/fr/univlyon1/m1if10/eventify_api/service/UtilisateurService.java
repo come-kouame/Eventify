@@ -1,9 +1,6 @@
 package fr.univlyon1.m1if10.eventify_api.service;
 
-import fr.univlyon1.m1if10.eventify_api.dto.AuthResponseDTO;
-import fr.univlyon1.m1if10.eventify_api.dto.LoginDTO;
-import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurCreateDTO;
-import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurDTO;
+import fr.univlyon1.m1if10.eventify_api.dto.*;
 import fr.univlyon1.m1if10.eventify_api.entity.Administrateur;
 import fr.univlyon1.m1if10.eventify_api.entity.Evenement;
 import fr.univlyon1.m1if10.eventify_api.entity.Organisateur;
@@ -186,6 +183,38 @@ public class UtilisateurService {
         return dto;
     }
 
+    public void changePassword(Integer id, ChangePasswordDTO dto, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+
+        if (session == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non connecté");
+        }
+
+        Integer currentUserId = (Integer) session.getAttribute("userId");
+
+        if (!currentUserId.equals(id)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Accès interdit");
+        }
+
+        Utilisateur user = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        boolean match;
+        if (user.getMdp().startsWith("$2a$") || user.getMdp().startsWith("$2b$") || user.getMdp().startsWith("$2y$")) {
+            match = passwordEncoder.matches(dto.getOldPassword(), user.getMdp());
+        } else {
+            match = dto.getOldPassword().equals(user.getMdp());
+        }
+
+        if (!match) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Ancien mot de passe incorrect");
+        }
+
+        user.setMdp(passwordEncoder.encode(dto.getNewPassword()));
+
+        repository.save(user);
+    }
+
     private UtilisateurDTO toDTO(Utilisateur u) {
         UtilisateurDTO dto = new UtilisateurDTO();
         dto.setId(u.getId());
@@ -196,7 +225,6 @@ public class UtilisateurService {
         dto.setVille(u.getVille());
         dto.setRue(u.getRue());
         dto.setCodePostal(u.getCodePostal());
-        dto.setMdp(u.getMdp()); // TODO pas vraiment sécurisé
         return dto;
     }
 

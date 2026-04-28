@@ -169,6 +169,22 @@ paths:
         "200":
           description: Utilisateur modifié
 
+  /utilisateurs/{id}/password:
+    put:
+      tags:
+        - Utilisateur
+      summary: Modifier le mot de passe d'un utilisateur
+      operationId: changePassword
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Mot de passe modifié
+
   /utilisateurs/{id}/set-to-organisateur:
     put:
       tags:
