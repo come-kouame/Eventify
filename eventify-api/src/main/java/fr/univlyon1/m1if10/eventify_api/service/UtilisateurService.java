@@ -196,6 +196,7 @@ public class UtilisateurService {
         dto.setVille(u.getVille());
         dto.setRue(u.getRue());
         dto.setCodePostal(u.getCodePostal());
+        dto.setMdp(u.getMdp()); // TODO pas vraiment sécurisé
         return dto;
     }
 

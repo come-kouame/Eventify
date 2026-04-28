@@ -19,4 +19,5 @@ public class UtilisateurDTO {
     private String ville;
     private String rue;
     private String codePostal;
+    private String mdp; // TODO pas vraiment sécurisé
 }
