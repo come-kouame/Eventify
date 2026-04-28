@@ -6,9 +6,19 @@ stages:
 
 sonarqube:
   stage: test
-  image: sonarsource/sonar-scanner-cli
+  image: maven:3-eclipse-temurin-21-alpine
+  variables:
+    GIT_DEPTH: 0
+  before_script:
+    - chmod +x ci/setup-mvn-proxy.sh
+    - ./ci/setup-mvn-proxy.sh
   script:
-    - sonar-scanner -Dsonar.host.url=https://sonar.info.univ-lyon1.fr -Dsonar.token=$SONAR_TOKEN
+    - cd eventify-api
+    - mvn verify sonar:sonar
+      -Dsonar.host.url=https://sonar.info.univ-lyon1.fr
+      -Dsonar.token=$SONAR_TOKEN
+      -Dsonar.projectKey=eventify
+      -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
 deploy:
   stage: deploy
@@ -24,3 +34,16 @@ deploy:
     - mvn clean package
     - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY ./target/*.war gitlabci@192.168.75.28:/opt/tomcat/webapps/eventify.war
     - cd ..
+    
+deploy-front:
+  stage: deploy
+  image: node:20-alpine
+  before_script:
+    - chmod 400 $CI_SSH_KEY
+    - apk add openssh-client
+  script:
+    - cd frontend
+    - npm ci
+    - npm run build
+    - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY -r .next package.json package-lock.json gitlabci@192.168.75.28:/opt/frontend/
+    - ssh -o StrictHostKeyChecking=no -i $CI_SSH_KEY gitlabci@192.168.75.28 "cd /opt/frontend && npm install --omit=dev && sudo systemctl restart frontend"
