@@ -37,15 +37,36 @@ public class UtilisateurService {
 
     public List<UtilisateurDTO> getAllUtilisateurs() {
         return repository.findAll().stream()
-                .map(this::toDTO)
+                .map(user -> {
+                    UtilisateurDTO dto = toDTO(user);
+
+                    organisateurRepository.findByUtilisateurId(user.getId())
+                            .ifPresent(orga -> dto.setId_orga(orga.getId()));
+
+                    administrateurRepository.findByUtilisateurId(user.getId())
+                            .ifPresent(admin -> dto.setId_admin(admin.getId()));
+
+                    return dto;
+                })
                 .toList();
     }
 
     public UtilisateurDTO getUtilisateurById(Integer id) {
         Utilisateur u = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur non trouvé " + id));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Utilisateur non trouvé " + id
+                ));
 
-        return toDTO(u);
+        UtilisateurDTO dto = toDTO(u);
+
+        organisateurRepository.findByUtilisateurId(id)
+                .ifPresent(orga -> dto.setId_orga(orga.getId()));
+
+        administrateurRepository.findByUtilisateurId(id)
+                .ifPresent(admin -> dto.setId_admin(admin.getId()));
+
+        return dto;
     }
 
     public UtilisateurDTO createUtilisateur(UtilisateurCreateDTO dto) {
