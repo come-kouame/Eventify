@@ -4,13 +4,16 @@ import fr.univlyon1.m1if10.eventify_api.dto.AuthResponseDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.LoginDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurCreateDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurDTO;
+import fr.univlyon1.m1if10.eventify_api.entity.Administrateur;
 import fr.univlyon1.m1if10.eventify_api.entity.Evenement;
+import fr.univlyon1.m1if10.eventify_api.entity.Organisateur;
 import fr.univlyon1.m1if10.eventify_api.entity.Utilisateur;
 import fr.univlyon1.m1if10.eventify_api.repository.AdministrateurRepository;
 import fr.univlyon1.m1if10.eventify_api.repository.OrganisateurRepository;
 import fr.univlyon1.m1if10.eventify_api.repository.UtilisateurRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UtilisateurService {
@@ -193,5 +197,61 @@ public class UtilisateurService {
         dto.setRue(u.getRue());
         dto.setCodePostal(u.getCodePostal());
         return dto;
+    }
+
+    public void setOrganisateur(Integer id) {
+
+        administrateurRepository.deleteById(id);
+
+        if (organisateurRepository.existsByUtilisateurId(id)) {
+            return;
+        }
+
+        Organisateur orga = new Organisateur();
+        orga.setUtilisateurId(id);
+
+        organisateurRepository.save(orga);
+    }
+
+    public void setAdministrateur(Integer id) {
+
+        if (administrateurRepository.existsByUtilisateurId(id)) {
+            return;
+        }
+
+        Optional<Organisateur> orgaOpt = organisateurRepository.findByUtilisateurId(id);
+
+        if (orgaOpt.isPresent()) {
+            Organisateur orga = orgaOpt.get();
+
+            Administrateur admin = new Administrateur();
+            admin.setUtilisateurId(id);
+            admin.setOrganisateurId(orga.getId());
+
+            administrateurRepository.save(admin);
+            return;
+        }
+
+        else{
+            Organisateur orga = new Organisateur();
+            orga.setUtilisateurId(id);
+            organisateurRepository.save(orga);
+            Organisateur orga2 = organisateurRepository.findByUtilisateurId(id).get();
+
+            Administrateur admin = new Administrateur();
+            admin.setUtilisateurId(id);
+            admin.setOrganisateurId(orga2.getId());
+            administrateurRepository.save(admin);
+        }
+
+    }
+
+    public void setUtilisateur(Integer id) {
+
+        administrateurRepository.findByUtilisateurId(id)
+                .ifPresent(admin -> administrateurRepository.delete(admin));
+
+        organisateurRepository.findByUtilisateurId(id)
+                .ifPresent(orga -> organisateurRepository.delete(orga));
     }
 }
