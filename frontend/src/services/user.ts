@@ -61,3 +61,39 @@ export const getStatut = (user: Utilisateur) => {
     if (user.id_orga != null) return "Organisateur";
     return "Utilisateur";
 };
+
+export async function promoteToOrga(id: number) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/promote-orga`, {
+        method: "POST",
+    });
+
+    if (!res.ok) throw new Error("Erreur promoteOrga");
+    return res.json();
+}
+
+export async function promoteToAdmin(id: number) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/promote-admin`, {
+        method: "POST",
+    });
+
+    if (!res.ok) throw new Error("Erreur promoteAdmin");
+    return res.json();
+}
+
+export async function demoteToOrga(id: number) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/demote-orga`, {
+        method: "POST",
+    });
+
+    if (!res.ok) throw new Error("Erreur demoteOrga");
+    return res.json();
+}
+
+export async function demoteToUser(id: number) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/demote-user`, {
+        method: "POST",
+    });
+
+    if (!res.ok) throw new Error("Erreur demoteUser");
+    return res.json();
+}
