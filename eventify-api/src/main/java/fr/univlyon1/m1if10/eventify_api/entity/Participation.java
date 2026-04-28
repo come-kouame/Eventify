@@ -13,6 +13,7 @@ public class Participation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_participation")
     private Integer idParticipation;
 
     @ManyToOne

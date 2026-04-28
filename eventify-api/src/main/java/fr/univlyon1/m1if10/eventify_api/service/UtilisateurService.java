@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -37,6 +38,7 @@ public class UtilisateurService {
 
     public List<UtilisateurDTO> getAllUtilisateurs() {
         return repository.findAll().stream()
+                .sorted(Comparator.comparing(Utilisateur::getNom))
                 .map(user -> {
                     UtilisateurDTO dto = toDTO(user);
 
@@ -116,31 +118,36 @@ public class UtilisateurService {
                 .orElseThrow(() -> {
                     return new ResponseStatusException(
                             HttpStatus.UNAUTHORIZED,
-                            "Identifiants invalides"
-                    );
+                            "Identifiants invalides");
                 });
 
         System.out.println("USER TROUVE = " + user.getEmail());
         System.out.println("MDP DB = " + user.getMdp());
 
-        boolean match = passwordEncoder.matches(dto.getMdp(), user.getMdp());
+        boolean match;
+        //pour les mdp hashés de la bd -kamelia-
+        if (user.getMdp().startsWith("$2a$") || user.getMdp().startsWith("$2b$") || user.getMdp().startsWith("$2y$")) {
+            match = passwordEncoder.matches(dto.getMdp(), user.getMdp());
+        } else { //j'ai remis cette ligne car notre bd contient les anciens user avec mdp non hashés -kamelia-
+            match = dto.getMdp().equals(user.getMdp());
+        }
+
         System.out.println("PASSWORD MATCH = " + match);
 
-        if (!passwordEncoder.matches(dto.getMdp(), user.getMdp())) {
+        if (!match) {
             System.out.println("PASSWORD INCORRECT");
             throw new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED,
-                    "Identifiants invalides"
-            );
-              }
+                    "Identifiants invalides");
+        }
 
-            HttpSession session = request.getSession(true);
-            session.setAttribute("userId", user.getId());
-            session.setAttribute("email", user.getEmail());
-            session.setAttribute("role", roleService.getRole(user.getId()));
-            AuthResponseDTO res = new AuthResponseDTO();
-            res.setEmail(user.getEmail());
-            return res;
+        HttpSession session = request.getSession(true);
+        session.setAttribute("userId", user.getId());
+        session.setAttribute("email", user.getEmail());
+        session.setAttribute("role", roleService.getRole(user.getId()));
+        AuthResponseDTO res = new AuthResponseDTO();
+        res.setEmail(user.getEmail());
+        return res;
     }
 
     public void logout(HttpServletRequest request) {
@@ -162,8 +169,7 @@ public class UtilisateurService {
         Utilisateur user = repository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.UNAUTHORIZED,
-                        "Session invalide"
-                ));
+                        "Session invalide"));
 
         UtilisateurDTO dto = toDTO(user);
 

@@ -6,11 +6,12 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "evenement")
+@Getter
+@Setter
 public class Evenement {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_evenement")
@@ -19,7 +20,7 @@ public class Evenement {
     @Column(name = "titre", nullable = false, length = 100)
     private String titre;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description")
     private String description;
 
     @Column(name = "date_debut", nullable = false)
@@ -28,26 +29,26 @@ public class Evenement {
     @Column(name = "date_fin", nullable = false)
     private LocalDateTime date_fin;
 
-    @Column(name = "lieu", columnDefinition = "TEXT")
+    @Column(name = "lieu", nullable = false)
     private String lieu;
 
-    @Column(name = "adresse", columnDefinition = "TEXT")
+    @Column(name = "adresse", nullable = false)
     private String adresse;
 
-    @Column(name = "poster", columnDefinition = "TEXT")
+    @Column(name = "poster")
     private String poster;
 
     @Column(name = "prix", nullable = false)
     private Double prix;
 
-    @Column(name = "nb_places")
+    @Column(name = "nb_places", nullable = false)
     private Integer nb_places;
 
-    @Column(name = "nb_places_vendues")
-    private Integer nb_places_vendues;
+    @Column(name = "nb_places_vendues", nullable = false)
+    private Integer nb_places_vendues = 0;
 
-    @Column(name = "valide")
-    private boolean valide;
+    @Column(name = "valide", nullable = false)
+    private boolean valide = false;
 
     @Column(name = "orga_id", nullable = false)
     private Integer orgaId;
