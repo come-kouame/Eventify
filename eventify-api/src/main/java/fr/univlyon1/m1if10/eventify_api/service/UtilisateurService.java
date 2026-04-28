@@ -4,42 +4,75 @@ import fr.univlyon1.m1if10.eventify_api.dto.AuthResponseDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.LoginDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurCreateDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurDTO;
+import fr.univlyon1.m1if10.eventify_api.entity.Administrateur;
 import fr.univlyon1.m1if10.eventify_api.entity.Evenement;
+import fr.univlyon1.m1if10.eventify_api.entity.Organisateur;
 import fr.univlyon1.m1if10.eventify_api.entity.Utilisateur;
+import fr.univlyon1.m1if10.eventify_api.repository.AdministrateurRepository;
+import fr.univlyon1.m1if10.eventify_api.repository.OrganisateurRepository;
 import fr.univlyon1.m1if10.eventify_api.repository.UtilisateurRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UtilisateurService {
 
     private final UtilisateurRepository repository;
+    private final OrganisateurRepository organisateurRepository;
+    private final AdministrateurRepository administrateurRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
 
-    public UtilisateurService(UtilisateurRepository repository, PasswordEncoder passwordEncoder, RoleService roleService) {
+    public UtilisateurService(UtilisateurRepository repository, OrganisateurRepository organisateurRepository, AdministrateurRepository administrateurRepository,PasswordEncoder passwordEncoder, RoleService roleService) {
         this.repository = repository;
+        this.organisateurRepository = organisateurRepository;
+        this.administrateurRepository = administrateurRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
     }
 
     public List<UtilisateurDTO> getAllUtilisateurs() {
         return repository.findAll().stream()
-                .map(this::toDTO)
+                .sorted(Comparator.comparing(Utilisateur::getNom))
+                .map(user -> {
+                    UtilisateurDTO dto = toDTO(user);
+
+                    organisateurRepository.findByUtilisateurId(user.getId())
+                            .ifPresent(orga -> dto.setId_orga(orga.getId()));
+
+                    administrateurRepository.findByUtilisateurId(user.getId())
+                            .ifPresent(admin -> dto.setId_admin(admin.getId()));
+
+                    return dto;
+                })
                 .toList();
     }
 
     public UtilisateurDTO getUtilisateurById(Integer id) {
         Utilisateur u = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur non trouvé " + id));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Utilisateur non trouvé " + id
+                ));
 
-        return toDTO(u);
+        UtilisateurDTO dto = toDTO(u);
+
+        organisateurRepository.findByUtilisateurId(id)
+                .ifPresent(orga -> dto.setId_orga(orga.getId()));
+
+        administrateurRepository.findByUtilisateurId(id)
+                .ifPresent(admin -> dto.setId_admin(admin.getId()));
+
+        return dto;
     }
 
     public UtilisateurDTO createUtilisateur(UtilisateurCreateDTO dto) {
@@ -89,31 +122,43 @@ public class UtilisateurService {
                 .orElseThrow(() -> {
                     return new ResponseStatusException(
                             HttpStatus.UNAUTHORIZED,
-                            "Identifiants invalides"
-                    );
+                            "Identifiants invalides");
                 });
 
         System.out.println("USER TROUVE = " + user.getEmail());
         System.out.println("MDP DB = " + user.getMdp());
 
-        boolean match = passwordEncoder.matches(dto.getMdp(), user.getMdp());
+        boolean match;
+        //pour les mdp hashés de la bd -kamelia-
+        if (user.getMdp().startsWith("$2a$") || user.getMdp().startsWith("$2b$") || user.getMdp().startsWith("$2y$")) {
+            match = passwordEncoder.matches(dto.getMdp(), user.getMdp());
+        } else { //j'ai remis cette ligne car notre bd contient les anciens user avec mdp non hashés -kamelia-
+            match = dto.getMdp().equals(user.getMdp());
+        }
+
         System.out.println("PASSWORD MATCH = " + match);
 
-        if (!passwordEncoder.matches(dto.getMdp(), user.getMdp())) {
+        if (!match) {
             System.out.println("PASSWORD INCORRECT");
             throw new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED,
-                    "Identifiants invalides"
-            );
-              }
+                    "Identifiants invalides");
+        }
 
-            HttpSession session = request.getSession(true);
-            session.setAttribute("userId", user.getId());
-            session.setAttribute("email", user.getEmail());
-            session.setAttribute("role", roleService.getRole(user.getId()));
-            AuthResponseDTO res = new AuthResponseDTO();
-            res.setEmail(user.getEmail());
-            return res;
+        HttpSession session = request.getSession(true);
+        session.setAttribute("userId", user.getId());
+        session.setAttribute("email", user.getEmail());
+        session.setAttribute("role", roleService.getRole(user.getId()));
+        AuthResponseDTO res = new AuthResponseDTO();
+        res.setEmail(user.getEmail());
+        return res;
+    }
+
+    public void logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
     }
 
     public UtilisateurDTO getCurrentUserDTO(HttpServletRequest request) {
@@ -128,10 +173,17 @@ public class UtilisateurService {
         Utilisateur user = repository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.UNAUTHORIZED,
-                        "Session invalide"
-                ));
+                        "Session invalide"));
 
-        return toDTO(user);
+        UtilisateurDTO dto = toDTO(user);
+
+        organisateurRepository.findByUtilisateurId(userId)
+                .ifPresent(orga -> dto.setId_orga(orga.getId()));
+
+        administrateurRepository.findByUtilisateurId(userId)
+                .ifPresent(admin -> dto.setId_admin(admin.getId()));
+
+        return dto;
     }
 
     private UtilisateurDTO toDTO(Utilisateur u) {
@@ -145,5 +197,60 @@ public class UtilisateurService {
         dto.setRue(u.getRue());
         dto.setCodePostal(u.getCodePostal());
         return dto;
+    }
+
+    public void setOrganisateur(Integer id) {
+
+        administrateurRepository.deleteById(id);
+
+        if (organisateurRepository.existsByUtilisateurId(id)) {
+            return;
+        }
+
+        Organisateur orga = new Organisateur();
+        orga.setUtilisateurId(id);
+
+        organisateurRepository.save(orga);
+    }
+
+    public void setAdministrateur(Integer id) {
+
+        if (administrateurRepository.existsByUtilisateurId(id)) {
+            return;
+        }
+
+        Optional<Organisateur> orgaOpt = organisateurRepository.findByUtilisateurId(id);
+
+        if (orgaOpt.isPresent()) {
+            Organisateur orga = orgaOpt.get();
+
+            Administrateur admin = new Administrateur();
+            admin.setUtilisateurId(id);
+            admin.setOrganisateurId(orga.getId());
+
+            administrateurRepository.save(admin);
+            return;
+        }
+
+        else{
+            Organisateur orga = new Organisateur();
+            orga.setUtilisateurId(id);
+            organisateurRepository.save(orga);
+
+            Administrateur admin = new Administrateur();
+            admin.setUtilisateurId(id);
+            admin.setOrganisateurId(orga.getId());
+            administrateurRepository.save(admin);
+        }
+
+    }
+
+    public void setUtilisateur(Integer id) {
+
+        administrateurRepository.findByUtilisateurId(id)
+                .ifPresent(admin -> administrateurRepository.delete(admin));
+
+        organisateurRepository.findByUtilisateurId(id)
+                .ifPresent(orga -> organisateurRepository.delete(orga));
     }
 }

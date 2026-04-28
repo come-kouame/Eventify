@@ -4,7 +4,8 @@ info:
   title: "Eventify"
   version: "1.0.0"
 servers:
-  - url: "http://localhost:8080"
+  - url: "https://localhost:8080"
+  - url: "http://192.168.75.28/api/eventify"
 tags:
   - name: Utilisateur
   - name: Evenement
@@ -74,38 +75,6 @@ paths:
         "200":
           description: Utilisateur créé
 
-    put:
-      tags:
-        - Utilisateur
-      summary: Modifier un utilisateur
-      operationId: editUtilisateur
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                nom:
-                  type: string
-                prenom:
-                  type: string
-                dateNaissance:
-                  type: string
-                email:
-                  type: string
-                ville:
-                  type: string
-                rue:
-                  type: string
-                codePostal:
-                  type: string
-                mdp:
-                  type: string
-      responses:
-        "200":
-          description: Utilisateur modifié
-
   /utilisateurs/{id}:
     get:
       tags:
@@ -162,6 +131,91 @@ paths:
           description: Utilisateur supprimé
         "404":
           description: Utilisateur non trouvé
+    put:
+      tags:
+        - Utilisateur
+      summary: Modifier un utilisateur
+      operationId: editUtilisateur
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nom:
+                  type: string
+                prenom:
+                  type: string
+                dateNaissance:
+                  type: string
+                email:
+                  type: string
+                ville:
+                  type: string
+                rue:
+                  type: string
+                codePostal:
+                  type: string
+                mdp:
+                  type: string
+      responses:
+        "200":
+          description: Utilisateur modifié
+
+  /utilisateurs/{id}/set-to-organisateur:
+    put:
+      tags:
+        - Utilisateur
+      summary: Passer un utilisateur en organisateur
+      operationId: setOrganisateur
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Utilisateur passé en organisateur
+
+  /utilisateurs/{id}/set-to-administrateur:
+    put:
+      tags:
+        - Utilisateur
+      summary: Passer un utilisateur en administrateur
+      operationId: setAdministrateur
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Utilisateur passé en administrateur
+
+  /utilisateurs/{id}/set-to-utilisateur:
+    put:
+      tags:
+        - Utilisateur
+      summary: Rétrograder un utilisateur en simple utilisateur
+      operationId: setUtilisateur
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Utilisateur rétrogradé en simple utilisateur
 
   /evenements:
     get:

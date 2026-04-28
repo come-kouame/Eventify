@@ -11,7 +11,7 @@ export const NavBarUser = () => {
 
                 <div className="flex text-xl space-x-4">
                     <a href="/event">Mes évènements</a>
-                    <a href="/profiles/x">Mon Compte</a>
+                    <a href="/profiles/me">Mon Compte</a>
                      <LogoutButton />
                 </div>
             </div>
