@@ -31,7 +31,7 @@ public class ParticipationService {
 
     public void inscrireUtilisateur(Integer utilisateurId, Integer evenementId) {
 
-        if (repository.existsByUtilisateurIdAndEvenementId(utilisateurId, evenementId)) {
+        if (repository.existsByUtilisateurIdAndEvenementId(evenementId, utilisateurId)) {
             throw new RuntimeException("Déjà inscrit");
         }
 
