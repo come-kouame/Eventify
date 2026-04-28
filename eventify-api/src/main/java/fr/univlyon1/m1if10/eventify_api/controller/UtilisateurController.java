@@ -43,6 +43,21 @@ public class UtilisateurController {
         return service.editUtilisateur(id, dto);
     }
 
+    @PutMapping("/{id}/set-to-organisateur")
+    public void setOrganisateur(@PathVariable Integer id) {
+        service.setOrganisateur(id);
+    }
+
+    @PutMapping("/{id}/set-to-administrateur")
+    public void setAdministrateur(@PathVariable Integer id) {
+        service.setAdministrateur(id);
+    }
+
+    @PutMapping("/{id}/set-to-utilisateur")
+    public void setUtilisateur(@PathVariable Integer id) {
+        service.setUtilisateur(id);
+    }
+
     // Supprimer un utilisateur par son ID
     @DeleteMapping("/{id}")
     public void deleteUtilisateur(@PathVariable Integer id) {
