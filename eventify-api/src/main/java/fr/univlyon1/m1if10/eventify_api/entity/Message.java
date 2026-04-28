@@ -5,7 +5,8 @@ import lombok.*;
 
 @Entity
 @Table(name = "messages")
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Message {
@@ -14,5 +15,6 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false)
     private String content;
 }
