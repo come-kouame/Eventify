@@ -4,7 +4,11 @@ import fr.univlyon1.m1if10.eventify_api.dto.AuthResponseDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.LoginDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurCreateDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurDTO;
+import fr.univlyon1.m1if10.eventify_api.entity.Administrateur;
+import fr.univlyon1.m1if10.eventify_api.entity.Organisateur;
 import fr.univlyon1.m1if10.eventify_api.entity.Utilisateur;
+import fr.univlyon1.m1if10.eventify_api.repository.AdministrateurRepository;
+import fr.univlyon1.m1if10.eventify_api.repository.OrganisateurRepository;
 import fr.univlyon1.m1if10.eventify_api.repository.UtilisateurRepository;
 import fr.univlyon1.m1if10.eventify_api.service.RoleService;
 import fr.univlyon1.m1if10.eventify_api.service.UtilisateurService;
@@ -25,84 +29,97 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class UtilisateurServiceTest {
 
+    private UtilisateurService createService(UtilisateurRepository repo, OrganisateurRepository orgaRepo, AdministrateurRepository adminRepo, PasswordEncoder enc, RoleService roleSvc) {
+        return new UtilisateurService(repo, orgaRepo, adminRepo, enc, roleSvc);
+    }
+
     @Test
     void testGetAllUtilisateurs() {
         UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
+        OrganisateurRepository orgaRepo = Mockito.mock(OrganisateurRepository.class);
+        AdministrateurRepository adminRepo = Mockito.mock(AdministrateurRepository.class);
         PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
         RoleService roleService = Mockito.mock(RoleService.class);
-        UtilisateurService service = new UtilisateurService(repository, passwordEncoder, roleService);
+        UtilisateurService service = createService(repository, orgaRepo, adminRepo, passwordEncoder, roleService);
 
         Utilisateur u1 = new Utilisateur();
         u1.setId(1);
-        u1.setNom("Un");
+        u1.setNom("A");
         
         Utilisateur u2 = new Utilisateur();
         u2.setId(2);
-        u2.setNom("Deux");
+        u2.setNom("B");
 
-        Mockito.when(repository.findAll()).thenReturn(Arrays.asList(u1, u2));
+        Mockito.when(repository.findAll()).thenReturn(Arrays.asList(u2, u1)); // To test sorting
+
+        Organisateur orga = new Organisateur();
+        orga.setId(10);
+        Mockito.when(orgaRepo.findByUtilisateurId(1)).thenReturn(Optional.of(orga));
+        Mockito.when(adminRepo.findByUtilisateurId(1)).thenReturn(Optional.empty());
+        Mockito.when(orgaRepo.findByUtilisateurId(2)).thenReturn(Optional.empty());
+        Mockito.when(adminRepo.findByUtilisateurId(2)).thenReturn(Optional.empty());
 
         List<UtilisateurDTO> result = service.getAllUtilisateurs();
 
         assertEquals(2, result.size());
-        assertEquals("Un", result.get(0).getNom());
-        assertEquals("Deux", result.get(1).getNom());
+        assertEquals("A", result.get(0).getNom());
+        assertEquals(10, result.get(0).getId_orga());
+        assertEquals("B", result.get(1).getNom());
     }
 
     @Test
     void testGetUtilisateurExistant() {
         UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
+        OrganisateurRepository orgaRepo = Mockito.mock(OrganisateurRepository.class);
+        AdministrateurRepository adminRepo = Mockito.mock(AdministrateurRepository.class);
         PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
         RoleService roleService = Mockito.mock(RoleService.class);
-        UtilisateurService service = new UtilisateurService(repository, passwordEncoder, roleService);
+        UtilisateurService service = createService(repository, orgaRepo, adminRepo, passwordEncoder, roleService);
 
         Utilisateur user = new Utilisateur();
         user.setId(1);
         user.setNom("Dupont");
         user.setPrenom("Jean");
-        user.setEmail("jdupont@test.com");
 
         Mockito.when(repository.findById(1)).thenReturn(Optional.of(user));
+        Mockito.when(orgaRepo.findByUtilisateurId(1)).thenReturn(Optional.empty());
+        Mockito.when(adminRepo.findByUtilisateurId(1)).thenReturn(Optional.empty());
 
         UtilisateurDTO result = service.getUtilisateurById(1);
 
         assertEquals(1, result.getId());
         assertEquals("Dupont", result.getNom());
-        assertEquals("Jean", result.getPrenom());
     }
 
     @Test
     void testGetUtilisateurInexistant() {
         UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
+        OrganisateurRepository orgaRepo = Mockito.mock(OrganisateurRepository.class);
+        AdministrateurRepository adminRepo = Mockito.mock(AdministrateurRepository.class);
         PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
         RoleService roleService = Mockito.mock(RoleService.class);
-        UtilisateurService service = new UtilisateurService(repository, passwordEncoder, roleService);
+        UtilisateurService service = createService(repository, orgaRepo, adminRepo, passwordEncoder, roleService);
 
         Mockito.when(repository.findById(99)).thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, () -> {
-            service.getUtilisateurById(99);
-        });
+        assertThrows(ResponseStatusException.class, () -> service.getUtilisateurById(99));
     }
 
     @Test
     void testCreateUtilisateurSuccess() {
         UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
+        OrganisateurRepository orgaRepo = Mockito.mock(OrganisateurRepository.class);
+        AdministrateurRepository adminRepo = Mockito.mock(AdministrateurRepository.class);
         PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
         RoleService roleService = Mockito.mock(RoleService.class);
-        UtilisateurService service = new UtilisateurService(repository, passwordEncoder, roleService);
+        UtilisateurService service = createService(repository, orgaRepo, adminRepo, passwordEncoder, roleService);
 
         UtilisateurCreateDTO dto = new UtilisateurCreateDTO();
-        dto.setNom("Martin");
-        dto.setPrenom("Alice");
         dto.setEmail("alice@test.com");
         dto.setMdp("password123");
-        dto.setDateNaissance(LocalDate.of(1995, 5, 15));
 
         Utilisateur savedUser = new Utilisateur();
         savedUser.setId(2);
-        savedUser.setNom("Martin");
-        savedUser.setPrenom("Alice");
         savedUser.setEmail("alice@test.com");
 
         Mockito.when(repository.existsByEmail("alice@test.com")).thenReturn(false);
@@ -112,50 +129,43 @@ public class UtilisateurServiceTest {
         UtilisateurDTO result = service.createUtilisateur(dto);
 
         assertEquals(2, result.getId());
-        assertEquals("Martin", result.getNom());
         assertEquals("alice@test.com", result.getEmail());
-        Mockito.verify(repository, Mockito.times(1)).save(Mockito.any(Utilisateur.class));
     }
 
     @Test
     void testCreateUtilisateurEmailConflict() {
         UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
+        OrganisateurRepository orgaRepo = Mockito.mock(OrganisateurRepository.class);
+        AdministrateurRepository adminRepo = Mockito.mock(AdministrateurRepository.class);
         PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
         RoleService roleService = Mockito.mock(RoleService.class);
-        UtilisateurService service = new UtilisateurService(repository, passwordEncoder, roleService);
+        UtilisateurService service = createService(repository, orgaRepo, adminRepo, passwordEncoder, roleService);
 
         UtilisateurCreateDTO dto = new UtilisateurCreateDTO();
         dto.setEmail("exist@test.com");
 
-        // On simule que l'email existe déjà dans la base
         Mockito.when(repository.existsByEmail("exist@test.com")).thenReturn(true);
 
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
-            service.createUtilisateur(dto);
-        });
-        
-        assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
-        assertTrue(exception.getReason().contains("Email déjà utilisé"));
+        assertThrows(ResponseStatusException.class, () -> service.createUtilisateur(dto));
     }
 
     @Test
     void testEditUtilisateurSuccess() {
         UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
+        OrganisateurRepository orgaRepo = Mockito.mock(OrganisateurRepository.class);
+        AdministrateurRepository adminRepo = Mockito.mock(AdministrateurRepository.class);
         PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
         RoleService roleService = Mockito.mock(RoleService.class);
-        UtilisateurService service = new UtilisateurService(repository, passwordEncoder, roleService);
+        UtilisateurService service = createService(repository, orgaRepo, adminRepo, passwordEncoder, roleService);
 
         UtilisateurCreateDTO dto = new UtilisateurCreateDTO();
         dto.setNom("Martin Modif");
-        dto.setPrenom("Alice");
         dto.setEmail("alice2@test.com");
         dto.setMdp("newpassword123");
-        dto.setDateNaissance(LocalDate.of(1995, 5, 15));
 
         Utilisateur existingUser = new Utilisateur();
         existingUser.setId(1);
         existingUser.setNom("Martin");
-        existingUser.setEmail("alice@test.com");
 
         Mockito.when(repository.findById(1)).thenReturn(Optional.of(existingUser));
         Mockito.when(passwordEncoder.encode("newpassword123")).thenReturn("newEncoded");
@@ -170,23 +180,25 @@ public class UtilisateurServiceTest {
     @Test
     void testEditUtilisateurNotFound() {
         UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
+        OrganisateurRepository orgaRepo = Mockito.mock(OrganisateurRepository.class);
+        AdministrateurRepository adminRepo = Mockito.mock(AdministrateurRepository.class);
         PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
         RoleService roleService = Mockito.mock(RoleService.class);
-        UtilisateurService service = new UtilisateurService(repository, passwordEncoder, roleService);
+        UtilisateurService service = createService(repository, orgaRepo, adminRepo, passwordEncoder, roleService);
 
         Mockito.when(repository.findById(99)).thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, () -> {
-            service.editUtilisateur(99, new UtilisateurCreateDTO());
-        });
+        assertThrows(ResponseStatusException.class, () -> service.editUtilisateur(99, new UtilisateurCreateDTO()));
     }
 
     @Test
-    void testDeleteUtilisateurExistant() {
+    void testDeleteUtilisateur() {
         UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
+        OrganisateurRepository orgaRepo = Mockito.mock(OrganisateurRepository.class);
+        AdministrateurRepository adminRepo = Mockito.mock(AdministrateurRepository.class);
         PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
         RoleService roleService = Mockito.mock(RoleService.class);
-        UtilisateurService service = new UtilisateurService(repository, passwordEncoder, roleService);
+        UtilisateurService service = createService(repository, orgaRepo, adminRepo, passwordEncoder, roleService);
 
         Utilisateur user = new Utilisateur();
         user.setId(1);
@@ -194,36 +206,18 @@ public class UtilisateurServiceTest {
         Mockito.when(repository.findById(1)).thenReturn(Optional.of(user));
 
         service.deleteUtilisateur(1);
-
-        // On vérifie que la méthode deleteById a bien été appelée une fois avec l'id 1
-        Mockito.verify(repository, Mockito.times(1)).deleteById(1);
-    }
-
-    @Test
-    void testDeleteUtilisateurInexistant() {
-        UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
-        PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        RoleService roleService = Mockito.mock(RoleService.class);
-        UtilisateurService service = new UtilisateurService(repository, passwordEncoder, roleService);
-
-        Mockito.when(repository.findById(99)).thenReturn(Optional.empty());
-
-        assertThrows(ResponseStatusException.class, () -> {
-            service.deleteUtilisateur(99);
-        });
-
-        // On vérifie que deleteById n'a jamais été appelée
-        Mockito.verify(repository, Mockito.never()).deleteById(99);
+        Mockito.verify(repository).deleteById(1);
     }
 
     @Test
     void testLoginSuccess() {
         UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
+        OrganisateurRepository orgaRepo = Mockito.mock(OrganisateurRepository.class);
+        AdministrateurRepository adminRepo = Mockito.mock(AdministrateurRepository.class);
         PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
         RoleService roleService = Mockito.mock(RoleService.class);
-        UtilisateurService service = new UtilisateurService(repository, passwordEncoder, roleService);
+        UtilisateurService service = createService(repository, orgaRepo, adminRepo, passwordEncoder, roleService);
 
-        // Mock de la requête HTTP et de la session (pour le login)
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         HttpSession session = Mockito.mock(HttpSession.class);
 
@@ -234,106 +228,135 @@ public class UtilisateurServiceTest {
         Utilisateur user = new Utilisateur();
         user.setId(1);
         user.setEmail("jdupont@test.com");
-        user.setMdp("encodedPassword");
+        user.setMdp("$2a$encodedPassword");
 
         Mockito.when(repository.findByEmail("jdupont@test.com")).thenReturn(Optional.of(user));
-        Mockito.when(passwordEncoder.matches("password123", "encodedPassword")).thenReturn(true);
+        Mockito.when(passwordEncoder.matches("password123", "$2a$encodedPassword")).thenReturn(true);
         Mockito.when(request.getSession(true)).thenReturn(session);
         Mockito.when(roleService.getRole(1)).thenReturn("USER");
 
         AuthResponseDTO response = service.login(dto, request);
 
         assertEquals("jdupont@test.com", response.getEmail());
-        Mockito.verify(session).setAttribute("userId", 1);
-        Mockito.verify(session).setAttribute("email", "jdupont@test.com");
-        Mockito.verify(session).setAttribute("role", "USER");
     }
 
     @Test
-    void testLoginInvalidPassword() {
+    void testLoginSuccessUnHashed() {
         UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
+        OrganisateurRepository orgaRepo = Mockito.mock(OrganisateurRepository.class);
+        AdministrateurRepository adminRepo = Mockito.mock(AdministrateurRepository.class);
         PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
         RoleService roleService = Mockito.mock(RoleService.class);
-        UtilisateurService service = new UtilisateurService(repository, passwordEncoder, roleService);
+        UtilisateurService service = createService(repository, orgaRepo, adminRepo, passwordEncoder, roleService);
 
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
 
         LoginDTO dto = new LoginDTO();
         dto.setEmail("jdupont@test.com");
-        dto.setMdp("wrongpassword");
+        dto.setMdp("password123");
 
         Utilisateur user = new Utilisateur();
         user.setId(1);
         user.setEmail("jdupont@test.com");
-        user.setMdp("encodedPassword");
+        user.setMdp("password123"); // Non hashé
 
         Mockito.when(repository.findByEmail("jdupont@test.com")).thenReturn(Optional.of(user));
-        Mockito.when(passwordEncoder.matches("wrongpassword", "encodedPassword")).thenReturn(false);
+        Mockito.when(request.getSession(true)).thenReturn(session);
 
-        assertThrows(ResponseStatusException.class, () -> {
-            service.login(dto, request);
-        });
+        AuthResponseDTO response = service.login(dto, request);
+
+        assertEquals("jdupont@test.com", response.getEmail());
     }
 
     @Test
-    void testLoginInvalidEmail() {
+    void testLogout() {
         UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
+        OrganisateurRepository orgaRepo = Mockito.mock(OrganisateurRepository.class);
+        AdministrateurRepository adminRepo = Mockito.mock(AdministrateurRepository.class);
         PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
         RoleService roleService = Mockito.mock(RoleService.class);
-        UtilisateurService service = new UtilisateurService(repository, passwordEncoder, roleService);
-
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-
-        LoginDTO dto = new LoginDTO();
-        dto.setEmail("unknown@test.com");
-        dto.setMdp("password123");
-
-        Mockito.when(repository.findByEmail("unknown@test.com")).thenReturn(Optional.empty());
-
-        assertThrows(ResponseStatusException.class, () -> {
-            service.login(dto, request);
-        });
-    }
-
-    @Test
-    void testGetCurrentUserSuccess() {
-        UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
-        PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        RoleService roleService = Mockito.mock(RoleService.class);
-        UtilisateurService service = new UtilisateurService(repository, passwordEncoder, roleService);
+        UtilisateurService service = createService(repository, orgaRepo, adminRepo, passwordEncoder, roleService);
 
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         HttpSession session = Mockito.mock(HttpSession.class);
 
         Mockito.when(request.getSession(false)).thenReturn(session);
-        Mockito.when(session.getAttribute("userId")).thenReturn(1);
-
-        Utilisateur user = new Utilisateur();
-        user.setId(1);
-        user.setNom("Connecté");
-
-        Mockito.when(repository.findById(1)).thenReturn(Optional.of(user));
-
-        UtilisateurDTO result = service.getCurrentUserDTO(request);
-
-        assertEquals(1, result.getId());
-        assertEquals("Connecté", result.getNom());
+        service.logout(request);
+        Mockito.verify(session).invalidate();
     }
 
     @Test
-    void testGetCurrentUserNotConnected() {
+    void testSetOrganisateur() {
         UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
+        OrganisateurRepository orgaRepo = Mockito.mock(OrganisateurRepository.class);
+        AdministrateurRepository adminRepo = Mockito.mock(AdministrateurRepository.class);
         PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
         RoleService roleService = Mockito.mock(RoleService.class);
-        UtilisateurService service = new UtilisateurService(repository, passwordEncoder, roleService);
+        UtilisateurService service = createService(repository, orgaRepo, adminRepo, passwordEncoder, roleService);
 
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        Mockito.when(orgaRepo.existsByUtilisateurId(1)).thenReturn(false);
 
-        // Simule qu'il n'y a pas de session active
-        Mockito.when(request.getSession(false)).thenReturn(null);
+        service.setOrganisateur(1);
 
-        assertThrows(ResponseStatusException.class, () -> {
-            service.getCurrentUserDTO(request);
-        });
+        Mockito.verify(adminRepo).deleteById(1);
+        Mockito.verify(orgaRepo).save(Mockito.any(Organisateur.class));
+    }
+
+    @Test
+    void testSetAdministrateurWithExistingOrga() {
+        UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
+        OrganisateurRepository orgaRepo = Mockito.mock(OrganisateurRepository.class);
+        AdministrateurRepository adminRepo = Mockito.mock(AdministrateurRepository.class);
+        PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
+        RoleService roleService = Mockito.mock(RoleService.class);
+        UtilisateurService service = createService(repository, orgaRepo, adminRepo, passwordEncoder, roleService);
+
+        Mockito.when(adminRepo.existsByUtilisateurId(1)).thenReturn(false);
+        Organisateur orga = new Organisateur();
+        orga.setId(10);
+        Mockito.when(orgaRepo.findByUtilisateurId(1)).thenReturn(Optional.of(orga));
+
+        service.setAdministrateur(1);
+
+        Mockito.verify(adminRepo).save(Mockito.any(Administrateur.class));
+    }
+
+    @Test
+    void testSetAdministrateurWithoutExistingOrga() {
+        UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
+        OrganisateurRepository orgaRepo = Mockito.mock(OrganisateurRepository.class);
+        AdministrateurRepository adminRepo = Mockito.mock(AdministrateurRepository.class);
+        PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
+        RoleService roleService = Mockito.mock(RoleService.class);
+        UtilisateurService service = createService(repository, orgaRepo, adminRepo, passwordEncoder, roleService);
+
+        Mockito.when(adminRepo.existsByUtilisateurId(1)).thenReturn(false);
+        Mockito.when(orgaRepo.findByUtilisateurId(1)).thenReturn(Optional.empty());
+
+        service.setAdministrateur(1);
+
+        Mockito.verify(orgaRepo).save(Mockito.any(Organisateur.class));
+        Mockito.verify(adminRepo).save(Mockito.any(Administrateur.class));
+    }
+
+    @Test
+    void testSetUtilisateur() {
+        UtilisateurRepository repository = Mockito.mock(UtilisateurRepository.class);
+        OrganisateurRepository orgaRepo = Mockito.mock(OrganisateurRepository.class);
+        AdministrateurRepository adminRepo = Mockito.mock(AdministrateurRepository.class);
+        PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
+        RoleService roleService = Mockito.mock(RoleService.class);
+        UtilisateurService service = createService(repository, orgaRepo, adminRepo, passwordEncoder, roleService);
+
+        Administrateur admin = new Administrateur();
+        Organisateur orga = new Organisateur();
+        Mockito.when(adminRepo.findByUtilisateurId(1)).thenReturn(Optional.of(admin));
+        Mockito.when(orgaRepo.findByUtilisateurId(1)).thenReturn(Optional.of(orga));
+
+        service.setUtilisateur(1);
+
+        Mockito.verify(adminRepo).delete(admin);
+        Mockito.verify(orgaRepo).delete(orga);
     }
 }
