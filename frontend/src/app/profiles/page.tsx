@@ -16,10 +16,6 @@ export default function Home() {
             <div className="flex px-10 gap-6">
                 {/* Sidebar */}
                 <div className="w-1/4 flex flex-col gap-6 rounded-lg">
-                    <a href="/profiles/create" className="py-4 text-xl rounded-lg bg-indigo-300 text-center">
-                        Créer un compte
-                    </a>
-
                     <div className="bg-zinc-300 p-6 flex flex-col gap-4 rounded-lg">
                         <h2 className="text-3xl text-center">Filtres</h2>
                         <div className="text-lg flex flex-col gap-3">
