@@ -196,6 +196,7 @@ public class UtilisateurService {
         dto.setVille(u.getVille());
         dto.setRue(u.getRue());
         dto.setCodePostal(u.getCodePostal());
+        dto.setMdp(u.getMdp()); // TODO pas vraiment sécurisé
         return dto;
     }
 
@@ -219,10 +220,12 @@ public class UtilisateurService {
             return;
         }
 
+
         Optional<Organisateur> orgaOpt = organisateurRepository.findByUtilisateurId(id);
 
         if (orgaOpt.isPresent()) {
             Organisateur orga = orgaOpt.get();
+
 
             Administrateur admin = new Administrateur();
             admin.setUtilisateurId(id);
