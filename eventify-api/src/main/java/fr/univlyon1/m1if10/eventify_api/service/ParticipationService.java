@@ -6,6 +6,7 @@ import fr.univlyon1.m1if10.eventify_api.entity.Participation;
 import fr.univlyon1.m1if10.eventify_api.entity.Utilisateur;
 import fr.univlyon1.m1if10.eventify_api.repository.EvenementRepository;
 import fr.univlyon1.m1if10.eventify_api.repository.ParticipationRepository;
+import fr.univlyon1.m1if10.eventify_api.repository.UtilisateurRepository;
 import org.springframework.stereotype.Service;
 
 
@@ -16,13 +17,15 @@ import java.util.List;
 public class ParticipationService {
 
     private final EvenementRepository evenementRepository;
-
+    private final UtilisateurRepository utilisateurRepository;
 
     private final ParticipationRepository repository;
 
     public ParticipationService(ParticipationRepository repository,
+                                UtilisateurRepository utilisateurRepository,
                                 EvenementRepository evenementRepository) {
         this.repository = repository;
+        this.utilisateurRepository = utilisateurRepository;
         this.evenementRepository = evenementRepository;
     }
 
@@ -43,10 +46,8 @@ public class ParticipationService {
         evenementRepository.save(evenement);
 
         Participation p = new Participation();
-
-        Utilisateur u = new Utilisateur();
-        u.setId(utilisateurId);
-
+        Utilisateur u = utilisateurRepository.getReferenceById(utilisateurId);
+        p.setUtilisateur(u);
         p.setUtilisateur(u);
         p.setEvenement(evenement);
 
