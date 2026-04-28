@@ -19,8 +19,6 @@ export default function Home() {
                 <BlocEvenements/>
             </main>
             <Hello/>
-
-
         </div>
     );
 }

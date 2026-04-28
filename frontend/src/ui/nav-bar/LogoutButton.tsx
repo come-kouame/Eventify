@@ -2,10 +2,8 @@
 
 export function LogoutButton() {
     const handleLogout = async () => {
-        console.log("CLICK LOGOUT");
-        alert("CLICK LOGOUT");
 
-        await fetch("http://localhost:8080/auth/logout", {
+        await fetch("http://192.168.75.28:8080/eventify/auth/logout", {
             method: "POST",
             credentials: "include",
         });
