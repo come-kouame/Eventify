@@ -6,14 +6,20 @@ import {BlocEvenements} from "@/ui/event/bloc-evenements"
 import {Hello} from "@/ui/message/hello";
 import { useEffect, useState } from "react";
 import { getMe, Utilisateur } from "@/services/user";
+import { getAllValidEvents, Event } from "@/services/events";
 
 export default function Home() {
     const [me, setMe] = useState<Utilisateur | null>(null);
+    const [events, setEvents] = useState<Event[]>([]);
 
     useEffect(() => {
         getMe()
             .then(setMe)
             .catch((err) => console.error("getMe error:", err));
+
+        getAllValidEvents()
+            .then(setEvents)
+            .catch((err) => console.error("getAllValidEvents error:", err));
     }, []);
     return (
         <div className=" justify-center bg-zinc-50 font-sans">
@@ -24,14 +30,16 @@ export default function Home() {
                 <div className="flex flex-col gap-4 mx-4">
                     <Calendar
                         date={new Date()}
+                        eventsDates={events.map((e) => new Date(e.date_debut))}
                     />
                     <Calendar
                         date={new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1)}
+                        eventsDates={events.map((e) => new Date(e.date_debut))}
                     />
                 </div>
 
                 {/* Event */}
-                <BlocEvenements/>
+                <BlocEvenements data={events}/>
             </main>
             <Hello/>
             {me && (

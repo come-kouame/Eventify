@@ -1,17 +1,8 @@
 "use client";
 import {EventPresentation} from "@/ui/event/event-presentation";
-import {getAllValidEvents, Event} from "@/services/events";
-import {useEffect, useState} from "react";
+import {Event} from "@/services/events";
 
-export const BlocEvenements = () => {
-    const [data, setData] = useState<Event[]>([]);
-
-    useEffect(() => {
-        getAllValidEvents()
-            .then(setData)
-            .catch(console.error);
-    }, []);
-
+export const BlocEvenements = ({ data }: { data: Event[] }) => {
 
     return (
         <div className="flex-1 flex justify-center flex-wrap gap-4">
