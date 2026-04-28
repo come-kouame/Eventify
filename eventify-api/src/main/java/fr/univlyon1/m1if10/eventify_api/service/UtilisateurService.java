@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -31,6 +32,7 @@ public class UtilisateurService {
 
     public List<UtilisateurDTO> getAllUtilisateurs() {
         return repository.findAll().stream()
+                .sorted(Comparator.comparing(Utilisateur::getNom))
                 .map(this::toDTO)
                 .toList();
     }

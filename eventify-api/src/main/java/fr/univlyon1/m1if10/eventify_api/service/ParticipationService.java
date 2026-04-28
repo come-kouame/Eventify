@@ -9,6 +9,7 @@ import fr.univlyon1.m1if10.eventify_api.repository.ParticipationRepository;
 import org.springframework.stereotype.Service;
 
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -54,6 +55,7 @@ public class ParticipationService {
 
     public List<UtilisateurDTO> getParticipantsByEvent(int id) {
         return repository.findByEvenementId(id).stream()
+                .sorted(Comparator.comparing(p -> p.getUtilisateur().getNom()))
                 .map(p -> {
                     UtilisateurDTO dto = new UtilisateurDTO();
                     Utilisateur tempu = p.getUtilisateur();
@@ -66,10 +68,8 @@ public class ParticipationService {
     }
     public List<EvenementDTO> getEvenementsByUtilisateur(int id) {
         return repository.findByEvenementId(id).stream()
-                .map(p -> {
-                    EvenementDTO dto = toDTO(p.getEvenement());
-                    return dto;
-                })
+                .sorted(Comparator.comparing(p -> p.getEvenement().getDate_debut()))
+                .map(p -> toDTO(p.getEvenement()))
                 .toList();
     }
 
