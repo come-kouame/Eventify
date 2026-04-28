@@ -248,6 +248,7 @@ public class UtilisateurServiceTest {
 
         LoginDTO dto = new LoginDTO();
         dto.setEmail("unknown@test.com");
+        dto.setEmail("unknown@test.com");
         dto.setMdp("password123");
 
         Mockito.when(repository.findByEmail("unknown@test.com")).thenReturn(Optional.empty());
@@ -275,6 +276,7 @@ public class UtilisateurServiceTest {
         Mockito.when(administrateurRepository.findByUtilisateurId(1)).thenReturn(Optional.empty());
 
         UtilisateurDTO result = service.getCurrentUserDTO(request);
+        UtilisateurDTO result = service.getCurrentUserDTO(request);
 
         assertEquals(1, result.getId());
         assertEquals("Connecté", result.getNom());
@@ -288,6 +290,7 @@ public class UtilisateurServiceTest {
         Mockito.when(request.getSession(false)).thenReturn(null);
 
         assertThrows(ResponseStatusException.class, () -> {
+            service.getCurrentUserDTO(request);
             service.getCurrentUserDTO(request);
         });
     }

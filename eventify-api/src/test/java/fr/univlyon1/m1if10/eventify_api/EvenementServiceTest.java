@@ -68,8 +68,8 @@ public class EvenementServiceTest {
         evenement.setId(1);
         evenement.setTitre("Concert");
         evenement.setDescription("Description test");
-        evenement.setDate_debut(java.time.LocalDate.now());
-        evenement.setDate_fin(java.time.LocalDate.now().plusDays(1));
+        evenement.setDate_debut(java.time.LocalDateTime.now());
+        evenement.setDate_fin(java.time.LocalDateTime.now().plusDays(1));
         evenement.setLieu("Lyon");
         evenement.setAdresse("10 rue test");
         evenement.setPoster("poster.png");
@@ -118,8 +118,8 @@ public class EvenementServiceTest {
         EvenementDTO dto = new EvenementDTO();
         dto.setTitre("Nouveau titre");
         dto.setDescription("Nouvelle description");
-        dto.setDate_debut(java.time.LocalDate.now());
-        dto.setDate_fin(java.time.LocalDate.now().plusDays(1));
+        dto.setDate_debut(java.time.LocalDateTime.now());
+        dto.setDate_fin(java.time.LocalDateTime.now().plusDays(1));
         dto.setLieu("Paris");
         dto.setAdresse("20 rue test");
         dto.setPoster("newposter.png");
