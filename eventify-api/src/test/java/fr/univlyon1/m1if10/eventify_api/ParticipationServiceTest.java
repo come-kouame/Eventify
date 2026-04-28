@@ -20,29 +20,31 @@ public class ParticipationServiceTest {
     @Test
     void testInscrireUtilisateurSucces() {
         ParticipationRepository repository = Mockito.mock(ParticipationRepository.class);
-        EvenementRepository eventRepo = Mockito.mock(EvenementRepository.class);
-        ParticipationService service = new ParticipationService(repository, eventRepo);
+        EvenementRepository evenementRepository = Mockito.mock(EvenementRepository.class);
+        ParticipationService service = new ParticipationService(repository, evenementRepository);
+
+        Evenement evenement = new Evenement();
+        evenement.setId(2);
+        evenement.setNb_places(10);
+        evenement.setNb_places_vendues(0);
 
         Mockito.when(repository.existsByUtilisateurIdAndEvenementId(1, 2))
                 .thenReturn(false);
-
-        Evenement ev = new Evenement();
-        ev.setNb_places(10);
-        ev.setNb_places_vendues(5);
-        Mockito.when(eventRepo.findById(2)).thenReturn(Optional.of(ev));
+        Mockito.when(evenementRepository.findById(2))
+                .thenReturn(Optional.of(evenement));
 
         service.inscrireUtilisateur(1, 2);
 
+        assertEquals(1, evenement.getNb_places_vendues());
+        Mockito.verify(evenementRepository).save(evenement);
         Mockito.verify(repository).save(Mockito.any(Participation.class));
-        Mockito.verify(eventRepo).save(ev);
-        assertEquals(6, ev.getNb_places_vendues());
     }
 
     @Test
     void testInscrireUtilisateurDejaInscrit() {
         ParticipationRepository repository = Mockito.mock(ParticipationRepository.class);
-        EvenementRepository eventRepo = Mockito.mock(EvenementRepository.class);
-        ParticipationService service = new ParticipationService(repository, eventRepo);
+        EvenementRepository evenementRepository = Mockito.mock(EvenementRepository.class);
+        ParticipationService service = new ParticipationService(repository, evenementRepository);
 
         Mockito.when(repository.existsByUtilisateurIdAndEvenementId(1, 2))
                 .thenReturn(true);
@@ -50,32 +52,57 @@ public class ParticipationServiceTest {
         assertThrows(RuntimeException.class, () -> {
             service.inscrireUtilisateur(1, 2);
         });
+
+        Mockito.verify(evenementRepository, Mockito.never()).findById(Mockito.anyInt());
+        Mockito.verify(repository, Mockito.never()).save(Mockito.any(Participation.class));
+    }
+
+    @Test
+    void testInscrireUtilisateurEvenementNonTrouve() {
+        ParticipationRepository repository = Mockito.mock(ParticipationRepository.class);
+        EvenementRepository evenementRepository = Mockito.mock(EvenementRepository.class);
+        ParticipationService service = new ParticipationService(repository, evenementRepository);
+
+        Mockito.when(repository.existsByUtilisateurIdAndEvenementId(1, 2))
+                .thenReturn(false);
+        Mockito.when(evenementRepository.findById(2))
+                .thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> {
+            service.inscrireUtilisateur(1, 2);
+        });
+
+        Mockito.verify(repository, Mockito.never()).save(Mockito.any(Participation.class));
     }
 
     @Test
     void testInscrireUtilisateurPlusDePlaces() {
         ParticipationRepository repository = Mockito.mock(ParticipationRepository.class);
-        EvenementRepository eventRepo = Mockito.mock(EvenementRepository.class);
-        ParticipationService service = new ParticipationService(repository, eventRepo);
+        EvenementRepository evenementRepository = Mockito.mock(EvenementRepository.class);
+        ParticipationService service = new ParticipationService(repository, evenementRepository);
+
+        Evenement evenement = new Evenement();
+        evenement.setId(2);
+        evenement.setNb_places(10);
+        evenement.setNb_places_vendues(10);
 
         Mockito.when(repository.existsByUtilisateurIdAndEvenementId(1, 2))
                 .thenReturn(false);
-
-        Evenement ev = new Evenement();
-        ev.setNb_places(10);
-        ev.setNb_places_vendues(10); // Plus de places
-        Mockito.when(eventRepo.findById(2)).thenReturn(Optional.of(ev));
+        Mockito.when(evenementRepository.findById(2))
+                .thenReturn(Optional.of(evenement));
 
         assertThrows(RuntimeException.class, () -> {
             service.inscrireUtilisateur(1, 2);
         });
+
+        Mockito.verify(repository, Mockito.never()).save(Mockito.any(Participation.class));
     }
 
     @Test
     void testGetParticipantsByEvent() {
         ParticipationRepository repository = Mockito.mock(ParticipationRepository.class);
-        EvenementRepository eventRepo = Mockito.mock(EvenementRepository.class);
-        ParticipationService service = new ParticipationService(repository, eventRepo);
+        EvenementRepository evenementRepository = Mockito.mock(EvenementRepository.class);
+        ParticipationService service = new ParticipationService(repository, evenementRepository);
 
         Utilisateur utilisateur = new Utilisateur();
         utilisateur.setId(1);
