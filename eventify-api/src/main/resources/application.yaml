@@ -11,3 +11,9 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+session:
+  cookie:
+    path: /eventify
+    http-only: true
+    secure: false
+    same-site: lax
