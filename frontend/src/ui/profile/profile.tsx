@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export const Profile = ({ user }: { user: any }) => {
+export const Profile = ({ user }: { user?: any }) => {
     return (
         <div className="px-6">
             <div className="bg-gray-200 p-6 rounded-lg">

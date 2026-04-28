@@ -53,7 +53,6 @@ export default function EventPage({params,}: {
                         date={eventDate}
                         onSelectDate={() => {}}
                         currentEventDate={eventDate}
-                        className="w-full"
                     />
 
                     <div className="flex flex-col gap-6 w-full text-center">
