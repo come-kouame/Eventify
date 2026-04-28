@@ -109,12 +109,18 @@ export async function setUser(id: number) {
 export async function setPassword(id: number, password: string) {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/password`, {
         method: "PUT",
+        //credentials: "include",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({ password }),
     });
 
-    if (!res.ok) throw new Error("Erreur setPassword");
+    if (!res.ok) {
+        const text = await res.text();
+        console.error("setPassword failed:", res.status, text);
+        throw new Error(`Erreur setPassword (${res.status})`);
+    }
+
     return res.json();
 }

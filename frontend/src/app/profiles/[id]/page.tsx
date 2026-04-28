@@ -39,8 +39,13 @@ export default function Home() {
     const handleSubmit = async () => {
         if (!me || !formData) return;
         try {
-            //const updated = await modifyUser(me.id, formData);
-            //setMe(updated);
+            await modifyUser(me.id, formData);
+
+
+            if (password.trim() !== "") {
+                await setPassword(me.id, password);
+                console.log("CHANGE");
+            }
 
             if (status === "Administrateur") {
                 await setAdmin(me.id);
@@ -48,10 +53,6 @@ export default function Home() {
                 await setOrga(me.id);
             } else {
                 await setUser(me.id);
-            }
-
-            if (password.trim() !== "") {
-                await setPassword(me.id, password);
             }
         } catch (error) {
             console.error(error);
@@ -165,19 +166,21 @@ export default function Home() {
 
                     {/* Buttons */}
                     <div className="flex gap-4 mt-8">
-                        <Link href="/profiles" className="flex-1">
-                            <button
-                                onClick={handleSubmit}
-                                className="flex-1 w-full bg-green-400 hover:bg-green-500 text-black text-2xl py-4 rounded-lg"
-                            >
-                                Valider
-                            </button>
-                        </Link>
-                        <Link href="/profiles" className="flex-1">
-                            <button className="w-full bg-red-400 hover:bg-red-500 text-black text-2xl py-4 rounded-lg">
-                                Annuler
-                            </button>
-                        </Link>
+                        <button
+                            onClick={async () => {
+                                await handleSubmit();
+                                router.push("/profiles");
+                            }}
+                            className="flex-1 w-full bg-green-400 hover:bg-green-500 text-black text-2xl py-4 rounded-lg"
+                        >
+                            Valider
+                        </button>
+                        <button
+                            onClick={() => router.push("/profiles")}
+                            className="flex-1 w-full bg-red-400 hover:bg-red-500 text-black text-2xl py-4 rounded-lg"
+                        >
+                            Annuler
+                        </button>
                     </div>
                 </div>
             </div>
