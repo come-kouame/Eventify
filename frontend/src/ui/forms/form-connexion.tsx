@@ -10,12 +10,11 @@ export function FormConnexion() {
     e.preventDefault();
 
         try {
-            const res = await fetch("http://192.168.75.28:8080/eventify/auth/login", {
+            const res = await fetch("https://192.168.75.28/api/eventify/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                credentials: "include",
                 body: JSON.stringify({
                     email: email,
                     mdp: mdp,
@@ -35,7 +34,7 @@ export function FormConnexion() {
             const data = JSON.parse(text);
             console.log("Connexion réussie :", data);
 
-            window.location.href = "/event";
+            // window.location.href = "/";
         } catch (err) {
             setError("Email ou mot de passe incorrect");
         }
