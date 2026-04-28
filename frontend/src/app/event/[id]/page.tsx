@@ -85,18 +85,6 @@ export default function EventPage({params,}: {
 
                 <div className="flex-1 flex flex-col gap-6">
                     <div className="bg-zinc-200 flex-1 flex rounded-lg p-6">
-                        {event.poster ? (
-                            <img
-                                src={event.poster}
-                                alt="Poster"
-                                className="w-1/4 h-auto rounded-lg mr-6 bg-zinc-300"
-                            />
-                        ) : (
-                            <div className="w-1/4 rounded-lg mr-6 bg-zinc-300 flex items-center justify-center">
-                                Poster
-                            </div>
-                        )}
-
                         <p className="text-4xl text-center flex-1 flex items-center justify-center">
                             {event.description}
                         </p>
