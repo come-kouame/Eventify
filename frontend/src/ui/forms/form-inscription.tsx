@@ -78,7 +78,7 @@ export default function FormInscription() {
         };
 
         try {
-            const res = await fetch("http://192.168.75.28:8080/eventify/utilisateurs", {
+            const res = await fetch("http://192.168.75.28/api/eventify/utilisateurs", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
