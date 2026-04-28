@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AuthResponseDTO {
-    private String login;
+    private String email;
 }

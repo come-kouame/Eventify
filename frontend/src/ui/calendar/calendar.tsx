@@ -1,15 +1,21 @@
 "use client";
 
+import React from "react";
+
 export const Calendar = ({
     date,
-    startDate,
-    endDate,
+    eventsDates = [],
+    currentEventDate = null,
+    selectedDate = null,
     onSelectDate,
+    onMonthChange,
 }: {
     date: Date;
-    startDate: Date | null;
-    endDate: Date | null;
-    onSelectDate: (d: Date) => void;
+    eventsDates?: Date[];
+    currentEventDate?: Date | null;
+    selectedDate?: Date | null;
+    onSelectDate?: (date: Date) => void;
+    onMonthChange?: (date: Date) => void;
 }) => {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -28,24 +34,84 @@ export const Calendar = ({
 
     const monthName = date.toLocaleString("fr-FR", { month: "long" });
 
+    const prevMonth = () => {
+        const newDate = new Date(date.getFullYear(), date.getMonth() - 1, 1);
+        onMonthChange?.(newDate);
+    };
+
+    const nextMonth = () => {
+        const newDate = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+        onMonthChange?.(newDate);
+    };
+
     const isSameDay = (a: Date, b: Date) =>
         a.getFullYear() === b.getFullYear() &&
         a.getMonth() === b.getMonth() &&
         a.getDate() === b.getDate();
 
-    const isInRange = (d: Date) => {
-        if (!startDate || !endDate) return false;
-        const t = d.setHours(0,0,0,0);
-        const s = new Date(startDate).setHours(0,0,0,0);
-        const e = new Date(endDate).setHours(0,0,0,0);
-        return t >= Math.min(s, e) && t <= Math.max(s, e);
+
+    const isToday = (d: Date) => {
+        const today = new Date();
+        return (
+            d.getFullYear() === today.getFullYear() &&
+            d.getMonth() === today.getMonth() &&
+            d.getDate() === today.getDate()
+        );
+    };
+
+    const isPast = (d: Date) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return d < today;
+    };
+
+    const isEventDay = (d: Date) => {
+        return eventsDates.some((e) =>
+            e.getFullYear() === d.getFullYear() &&
+            e.getMonth() === d.getMonth() &&
+            e.getDate() === d.getDate()
+        );
+    };
+
+    const isCurrentEvent = (d: Date) => {
+        if (!currentEventDate) return false;
+        return (
+            d.getFullYear() === currentEventDate.getFullYear() &&
+            d.getMonth() === currentEventDate.getMonth() &&
+            d.getDate() === currentEventDate.getDate()
+        );
+    };
+
+    const isSelected = (d: Date) => {
+        if (!selectedDate) return false;
+        return (
+            d.getFullYear() === selectedDate.getFullYear() &&
+            d.getMonth() === selectedDate.getMonth() &&
+            d.getDate() === selectedDate.getDate()
+        );
     };
 
     return (
         <div className="bg-white rounded-lg shadow p-4 w-64">
-            <h3 className="text-lg font-bold capitalize mb-2">
-                {monthName} {year}
-            </h3>
+            <div className="flex items-center justify-between mb-2">
+                <button
+                    onClick={prevMonth}
+                    className="px-2 py-1 rounded hover:bg-gray-200"
+                >
+                    ←
+                </button>
+
+                <h3 className="text-lg font-bold capitalize">
+                    {monthName} {year}
+                </h3>
+
+                <button
+                    onClick={nextMonth}
+                    className="px-2 py-1 rounded hover:bg-gray-200"
+                >
+                    →
+                </button>
+            </div>
             <div className="grid grid-cols-7 gap-1 text-center text-sm">
                 {["L", "M", "M", "J", "V", "S", "D"].map((d, i) => (
                     <div key={i} className="font-semibold">{d}</div>
@@ -55,19 +121,25 @@ export const Calendar = ({
 
                     const currentDate = new Date(year, month, d);
 
-                    const isStart = startDate && isSameDay(currentDate, startDate);
-                    const isEnd = endDate && isSameDay(currentDate, endDate);
-                    const inRange = isInRange(new Date(currentDate));
 
                     return (
                         <div
                             key={i}
-                            onClick={() => onSelectDate(currentDate)}
+                            onClick={() => onSelectDate?.(currentDate)}
                             className={`py-1 cursor-pointer rounded
-                ${isStart || isEnd ? "bg-blue-600 text-white" : ""}
-                ${!isStart && !isEnd && inRange ? "bg-blue-200" : ""}
-                ${!inRange && !isStart && !isEnd ? "hover:bg-gray-200" : ""}
-            `}
+    ${isPast(currentDate)
+        ? "text-gray-400 bg-gray-200 pointer-events-none"
+        : isSelected(currentDate)
+        ? "bg-black text-white"
+        : isCurrentEvent(currentDate)
+        ? "bg-green-500 text-white"
+        : isToday(currentDate)
+        ? "bg-blue-500 text-white"
+        : isEventDay(currentDate)
+        ? "bg-green-400 text-white"
+        : "hover:bg-gray-200"
+    }
+`}
                         >
                             {d}
                         </div>

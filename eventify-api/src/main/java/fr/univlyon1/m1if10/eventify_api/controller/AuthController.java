@@ -2,6 +2,7 @@ package fr.univlyon1.m1if10.eventify_api.controller;
 
 import fr.univlyon1.m1if10.eventify_api.dto.AuthResponseDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.LoginDTO;
+import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurDTO;
 import fr.univlyon1.m1if10.eventify_api.service.UtilisateurService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"http://localhost:3000", "https://192.168.75.28"}, allowCredentials = "true")
 public class AuthController {
     private final UtilisateurService service;
 
@@ -24,6 +25,11 @@ public class AuthController {
 
     @PostMapping("/logout")
     public void logout(HttpServletRequest request) {
-        request.getSession().invalidate();
+        service.logout(request);
+    }
+
+    @GetMapping("/me")
+    public UtilisateurDTO me(HttpServletRequest request) {
+        return service.getCurrentUserDTO(request);
     }
 }

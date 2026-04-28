@@ -15,6 +15,5 @@ public class UtilisateurCreateDTO {
     private String ville;
     private String rue;
     private String codePostal;
-    private String login;
     private String mdp;
 }

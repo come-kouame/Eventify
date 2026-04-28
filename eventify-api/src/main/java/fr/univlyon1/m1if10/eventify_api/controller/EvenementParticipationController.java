@@ -24,9 +24,9 @@ public class EvenementParticipationController {
     }
 
     // Inscrire un utilisateur à un événement
-    // GET /evenements/{id}/inscription?userId=1
-    @GetMapping("/{id}/inscription")
+    // PUT /evenements/{id}/inscription?userId=1
+    @PutMapping("/{id}/inscription")
     public void inscrireUtilisateur(@PathVariable int id, @RequestParam("userId") int userId) {
-        service.inscrireUtilisateur(id, userId);
+        service.inscrireUtilisateur(userId, id);
     }
 }
