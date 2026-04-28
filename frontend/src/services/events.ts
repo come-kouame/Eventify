@@ -71,7 +71,7 @@ export async function getEventByUser(id: number): Promise<Event[]> {
         throw new Error(`Erreur ${res.status}`);
     }
 
-    const data: Event = await res.json();
+    const data: Event[] = await res.json();
     return data;
 }
 

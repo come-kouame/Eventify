@@ -82,7 +82,6 @@ export default function Home() {
                         selectedDate={date}
                         onSelectDate={(d) => setDate(d)}
                         onMonthChange={(d) => setCalendarMonth(d)}
-                        className="w-full"
                     />
 
                     {/* Informations importantes */}

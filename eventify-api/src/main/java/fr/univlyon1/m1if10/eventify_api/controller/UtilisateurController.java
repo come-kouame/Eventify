@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/utilisateurs")
+@CrossOrigin(origins = "*")
 public class UtilisateurController {
 
     private final UtilisateurService service;
@@ -40,6 +41,21 @@ public class UtilisateurController {
     @PutMapping
     public UtilisateurDTO editUtilisateur(@PathVariable Integer id, @RequestBody UtilisateurCreateDTO dto) {
         return service.editUtilisateur(id, dto);
+    }
+
+    @PutMapping("/{id}/set-to-organisateur")
+    public void setOrganisateur(@PathVariable Integer id) {
+        service.setOrganisateur(id);
+    }
+
+    @PutMapping("/{id}/set-to-administrateur")
+    public void setAdministrateur(@PathVariable Integer id) {
+        service.setAdministrateur(id);
+    }
+
+    @PutMapping("/{id}/set-to-utilisateur")
+    public void setUtilisateur(@PathVariable Integer id) {
+        service.setUtilisateur(id);
     }
 
     // Supprimer un utilisateur par son ID

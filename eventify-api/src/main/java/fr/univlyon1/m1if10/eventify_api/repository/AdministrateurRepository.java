@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface AdministrateurRepository extends JpaRepository<Administrateur, Integer> {
 
     Optional<Administrateur> findByUtilisateurId(Integer UtilisateurId);
+
+    boolean existsByUtilisateurId(Integer id);
 }

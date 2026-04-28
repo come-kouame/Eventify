@@ -119,7 +119,6 @@ export default function Home({ params }: { params: Promise<{ id: string }> }) {
                         selectedDate={date}
                         onSelectDate={(d) => setDate(d)}
                         onMonthChange={(d) => setCalendarMonth(d)}
-                        className="w-full"
                     />
 
                     {/* Informations importantes */}

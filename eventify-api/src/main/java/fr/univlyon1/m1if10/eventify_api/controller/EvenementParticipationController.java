@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/evenements")
+@CrossOrigin(origins = "*")
 public class EvenementParticipationController {
 
     private final ParticipationService service;
