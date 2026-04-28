@@ -1,8 +1,9 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
+import { Suspense } from "react";
 
-export default function RegisterPage() {
+function RegisterInner() {
     const searchParams = useSearchParams();
     const router = useRouter();
 
@@ -23,5 +24,13 @@ export default function RegisterPage() {
                 Retour au menu
             </button>
         </div>
+    );
+}
+
+export default function RegisterPage() {
+    return (
+        <Suspense fallback={<div>Chargement...</div>}>
+            <RegisterInner />
+        </Suspense>
     );
 }
