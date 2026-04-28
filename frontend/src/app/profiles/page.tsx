@@ -1,9 +1,21 @@
+"use client";
+import { useState } from "react";
 import {NavBarNotConnected} from "@/ui/nav-bar/nav-bar-not-connected";
 import {NavBar} from "@/ui/nav-bar/nav-bar";
 
 import { LigneProfile } from "@/ui/profile/ligne-profile";
 
 export default function Home() {
+    const [filters, setFilters] = useState<string[]>([]);
+
+    const toggleFilter = (filter: string) => {
+        setFilters((prev) =>
+            prev.includes(filter)
+                ? prev.filter((f) => f !== filter)
+                : [...prev, filter]
+        );
+    };
+
     return (
         <div className="min-h-screen bg-zinc-100 font-sans">
             <NavBar/>
@@ -20,20 +32,28 @@ export default function Home() {
                         <h2 className="text-3xl text-center">Filtres</h2>
                         <div className="text-lg flex flex-col gap-3">
                             <label className="flex items-center gap-2">
-                                <input type="checkbox"/>
+                                <input
+                                    type="checkbox"
+                                    checked={filters.includes("Administrateur")}
+                                    onChange={() => toggleFilter("Administrateur")}
+                                />
                                 Administrateur
                             </label>
                             <label className="flex items-center gap-2">
-                                <input type="checkbox"/>
+                                <input
+                                    type="checkbox"
+                                    checked={filters.includes("Organisateur")}
+                                    onChange={() => toggleFilter("Organisateur")}
+                                />
                                 Organisateur
                             </label>
                             <label className="flex items-center gap-2">
-                                <input type="checkbox"/>
-                                Participant
-                            </label>
-                            <label className="flex items-center gap-2">
-                                <input type="checkbox"/>
-                                Supprimé
+                                <input
+                                    type="checkbox"
+                                    checked={filters.includes("Utilisateur")}
+                                    onChange={() => toggleFilter("Utilisateur")}
+                                />
+                                Utilisateur
                             </label>
                         </div>
                     </div>
@@ -52,7 +72,7 @@ export default function Home() {
                             </tr>
                         </thead>
                         <tbody>
-                            <LigneProfile />
+                            <LigneProfile filters={filters} />
                         </tbody>
                     </table>
                 </div>

@@ -1,3 +1,5 @@
+"use client";
+
 interface Props {
     id: number;
     title : string;
@@ -10,6 +12,10 @@ interface Props {
     place_current : number;
 }
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { getMe, Utilisateur } from "@/services/user";
+
 export const EventPresentation = ({
     id,
     title,
@@ -21,6 +27,14 @@ export const EventPresentation = ({
     place_init,
     place_current,
 }: Props) => {
+    const router = useRouter();
+    const [me, setMe] = useState<Utilisateur | null>(null);
+
+    useEffect(() => {
+        getMe()
+            .then(setMe)
+            .catch(() => setMe(null));
+    }, []);
     let priceText = "";
 
     if (price <= 0) {
@@ -65,9 +79,19 @@ export const EventPresentation = ({
                     <div className="w-1/3 bg-gray-400 py-3">
                         {place_current} places restantes
                     </div>
-                    <a href={`/event/${id}`} className="w-1/3 bg-gray-300 py-3 cursor-pointer hover:bg-gray-500 hover:text-white transition block">
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault();
+                            if (me) {
+                                router.push(`/event/${id}`);
+                            } else {
+                                router.push("/login");
+                            }
+                        }}
+                        className="w-1/3 bg-gray-300 py-3 cursor-pointer hover:bg-gray-500 hover:text-white transition block"
+                    >
                         Réserver
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>

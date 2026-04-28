@@ -56,6 +56,23 @@ export async function getUserByID(id: number): Promise<Utilisateur> {
     return data;
 }
 
+export async function modifyUser(id: number, userData: Omit<Utilisateur, "id" | "id_admin" | "id_orga">): Promise<Utilisateur> {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+    });
+
+    if (!res.ok) {
+        throw new Error(`Erreur ${res.status}`);
+    }
+
+    const data: Utilisateur = await res.json();
+    return data;
+}
+
 export const getStatut = (user: Utilisateur) => {
     if (user.id_admin != null) return "Administrateur";
     if (user.id_orga != null) return "Organisateur";
