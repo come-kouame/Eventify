@@ -61,24 +61,14 @@ export default function Home() {
                                 <input type="text" value={me?.codePostal ?? ""} readOnly className="w-full bg-white border border-zinc-300 rounded-md px-2 py-1 outline-none focus:ring-2 focus:ring-indigo-400" />
                             </div>
                             <div>
-                                <label className="text-lg font-bold">Numéro de tel :</label>
-                                <input type="text" value="" readOnly className="w-full bg-white border border-zinc-300 rounded-md px-2 py-1 outline-none focus:ring-2 focus:ring-indigo-400" />
+                                <label className="text-lg font-bold">Date de naissance :</label>
+                                <input
+                                    type="date"
+                                    defaultValue={me?.dateNaissance}
+                                    className="w-full bg-white border border-zinc-300 rounded-md px-2 py-1 outline-none focus:ring-2 focus:ring-indigo-400"
+                                />
                             </div>
                         </div>
-                    </div>
-
-                    {/* Status */}
-                    <div className="flex items-center mt-8 text-xl space-x-6">
-                        <span className="text-lg font-bold">Statut :</span>
-                        <label className="flex items-center gap-2">
-                            <input type="radio" name="status" /> Administrateur
-                        </label>
-                        <label className="flex items-center gap-2">
-                            <input type="radio" name="status" /> Organisateur
-                        </label>
-                        <label className="flex items-center gap-2">
-                            <input type="radio" name="status" defaultChecked /> Participant
-                        </label>
                     </div>
 
                     {/* Buttons */}

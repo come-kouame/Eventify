@@ -80,12 +80,6 @@ export function FormConnexion() {
 
                     {error && <p className="text-sm text-red-600">{error}</p>}
 
-                    <div className="flex items-center justify-end">
-                        <a href="#" className="text-sm font-medium text-blue-600 hover:underline">
-                            Mot de passe oublié ?
-                        </a>
-                    </div>
-
                     <button
                         type="submit"
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg px-5 py-3 text-center transition duration-200 focus:outline-none focus:ring-4 focus:ring-blue-300"
