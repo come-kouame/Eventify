@@ -6,19 +6,9 @@ stages:
 
 sonarqube:
   stage: test
-  image: maven:3-eclipse-temurin-21-alpine
-  variables:
-    GIT_DEPTH: 0
-  before_script:
-    - chmod +x ci/setup-mvn-proxy.sh
-    - ./ci/setup-mvn-proxy.sh
+  image: sonarsource/sonar-scanner-cli
   script:
-    - cd eventify-api
-    - mvn verify sonar:sonar
-      -Dsonar.host.url=https://sonar.info.univ-lyon1.fr
-      -Dsonar.token=$SONAR_TOKEN
-      -Dsonar.projectKey=eventify
-      -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+    - sonar-scanner -Dsonar.host.url=https://sonar.info.univ-lyon1.fr -Dsonar.token=$SONAR_TOKEN
 
 deploy:
   stage: deploy
