@@ -78,7 +78,7 @@ export default function FormInscription() {
         };
 
         try {
-            const res = await fetch("http://localhost:8080/utilisateurs", {
+            const res = await fetch("http://192.168.75.28:8080/eventify/utilisateurs", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -86,20 +86,25 @@ export default function FormInscription() {
                 body: JSON.stringify(body),
             });
 
+            const text = await res.text();
+            console.log("STATUS SIGNUP =", res.status);
+            console.log("REPONSE BACK =", text);
+
             if (!res.ok) {
-                setErrors({ general: "Erreur lors de l'inscription" });
+                setErrors({ general: text || "Erreur lors de l'inscription" });
                 return;
             }
 
             window.location.href = "/login";
-        } catch {
+        } catch (err) {
+            console.error("ERREUR FRONT SIGNUP =", err);
             setErrors({ general: "Erreur lors de l'inscription" });
         }
     };
 
     return (
         <div className="flex items-center justify-center px-6 mx-auto">
-          <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-3xl xl:p-0">
+            <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-3xl xl:p-0">
                 <div className="sm:p-8">
                     <form onSubmit={handleSubmit} noValidate className="grid grid-cols-2 gap-4">
                         <div>
