@@ -1,16 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
 import { NavBar } from "@/ui/nav-bar/nav-bar";
-import { getStatut, getUserByID, modifyUser, setAdmin, setOrga, setUser, Utilisateur } from "@/services/user";
+import { getStatut, getUserByID, modifyUser, setAdmin, setOrga, setPassword, setUser, Utilisateur } from "@/services/user";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 export default function Home() {
     const params = useParams();
+    const router = useRouter();
     const id = params.id;
     const [me, setMe] = useState<Utilisateur | null>(null);
     const [formData, setFormData] = useState<Omit<Utilisateur, "id" | "id_admin" | "id_orga"> | null>(null);
     const [status, setStatus] = useState("Utilisateur");
+    const [password, setPasswordState] = useState("");
 
     useEffect(() => {
         getUserByID(Number(id))
@@ -37,8 +39,13 @@ export default function Home() {
     const handleSubmit = async () => {
         if (!me || !formData) return;
         try {
-            const updated = await modifyUser(me.id, formData);
-            setMe(updated);
+            await modifyUser(me.id, formData);
+
+
+            if (password.trim() !== "") {
+                await setPassword(me.id, password);
+                console.log("CHANGE");
+            }
 
             if (status === "Administrateur") {
                 await setAdmin(me.id);
@@ -94,7 +101,12 @@ export default function Home() {
                             </div>
                             <div>
                                 <label className="text-lg font-bold">Mot de passe :</label>
-                                <input type="password" value="" readOnly className="w-full bg-white border border-zinc-300 rounded-md px-2 py-1 outline-none focus:ring-2 focus:ring-indigo-400" />
+                                <input
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => setPasswordState(e.target.value)}
+                                    className="w-full bg-white border border-zinc-300 rounded-md px-2 py-1 outline-none focus:ring-2 focus:ring-indigo-400"
+                                />
                             </div>
                         </div>
 
@@ -155,16 +167,20 @@ export default function Home() {
                     {/* Buttons */}
                     <div className="flex gap-4 mt-8">
                         <button
-                            onClick={handleSubmit}
+                            onClick={async () => {
+                                await handleSubmit();
+                                router.push("/profiles");
+                            }}
                             className="flex-1 w-full bg-green-400 hover:bg-green-500 text-black text-2xl py-4 rounded-lg"
                         >
                             Valider
                         </button>
-                        <Link href="/" className="flex-1">
-                            <button className="w-full bg-red-400 hover:bg-red-500 text-black text-2xl py-4 rounded-lg">
-                                Annuler
-                            </button>
-                        </Link>
+                        <button
+                            onClick={() => router.push("/profiles")}
+                            className="flex-1 w-full bg-red-400 hover:bg-red-500 text-black text-2xl py-4 rounded-lg"
+                        >
+                            Annuler
+                        </button>
                     </div>
                 </div>
             </div>
