@@ -1,9 +1,15 @@
-import {NavBarNotConnected} from "@/ui/nav-bar/nav-bar-not-connected"
-import {EventPresentation} from "@/ui/event/event-presentation";
+"use client";
+import { useState } from "react";
 import {NavBar} from "@/ui/nav-bar/nav-bar";
 import {BlocModify} from "@/ui/event/bloc-modify"
 
 export default function Home() {
+    const [filters, setFilters] = useState({
+        enCours: false,
+        aValider: false,
+        passe: false,
+    });
+
     return (
         <div className="min-h-screen bg-zinc-100 font-sans">
             <NavBar/>
@@ -28,19 +34,27 @@ export default function Home() {
                         <h2 className="text-3xl text-center">Filtres</h2>
                         <div className="text-lg flex flex-col gap-3">
                             <label className="flex items-center gap-2">
-                                <input type="checkbox" />
+                                <input
+                                    type="checkbox"
+                                    checked={filters.enCours}
+                                    onChange={() => setFilters({...filters, enCours: !filters.enCours})}
+                                />
                                 En cours
                             </label>
                             <label className="flex items-center gap-2">
-                                <input type="checkbox" />
+                                <input
+                                    type="checkbox"
+                                    checked={filters.aValider}
+                                    onChange={() => setFilters({...filters, aValider: !filters.aValider})}
+                                />
                                 À valider
                             </label>
                             <label className="flex items-center gap-2">
-                                <input type="checkbox" />
-                                Annulé
-                            </label>
-                            <label className="flex items-center gap-2">
-                                <input type="checkbox" />
+                                <input
+                                    type="checkbox"
+                                    checked={filters.passe}
+                                    onChange={() => setFilters({...filters, passe: !filters.passe})}
+                                />
                                 Passé
                             </label>
                         </div>
@@ -49,7 +63,7 @@ export default function Home() {
 
                 {/* Right panel */}
                 <div className="flex-1 bg-zinc-300 flex flex-col gap-4 p-6 rounded-lg">
-                    <BlocModify/>
+                    <BlocModify filters={filters} />
                 </div>
 
             </div>

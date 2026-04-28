@@ -3,7 +3,15 @@ import {EventModify} from "@/ui/event/event-modify";
 import {getAllEvents, Event} from "@/services/events";
 import {useEffect, useState} from "react";
 
-export const BlocModify = () => {
+interface Props {
+    filters: {
+        enCours: boolean;
+        aValider: boolean;
+        passe: boolean;
+    };
+}
+
+export const BlocModify = ({ filters }: Props) => {
     const [data, setData] = useState<Event[]>([]);
 
     useEffect(() => {
@@ -12,10 +20,24 @@ export const BlocModify = () => {
             .catch(console.error);
     }, []);
 
+    const filteredData = data.filter((event) => {
+        const isPasse = new Date(event.date_debut) < new Date();
+        const isAValider = event.admin_id == null;
+        const isEnCours = !isPasse && !isAValider;
+
+        const noFilterSelected = !filters.enCours && !filters.aValider && !filters.passe;
+        if (noFilterSelected) return true;
+
+        return (
+            (filters.enCours && isEnCours) ||
+            (filters.aValider && isAValider) ||
+            (filters.passe && isPasse)
+        );
+    });
 
     return (
         <div className="flex-1 flex justify-center flex-wrap gap-4">
-            {data.map((event) => (
+            {filteredData.map((event) => (
                 <EventModify
                     key={event.id}
                     id={event.id}
