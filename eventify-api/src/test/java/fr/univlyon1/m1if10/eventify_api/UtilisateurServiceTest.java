@@ -276,8 +276,6 @@ public class UtilisateurServiceTest {
         Mockito.when(administrateurRepository.findByUtilisateurId(1)).thenReturn(Optional.empty());
 
         UtilisateurDTO result = service.getCurrentUserDTO(request);
-        UtilisateurDTO result = service.getCurrentUserDTO(request);
-
         assertEquals(1, result.getId());
         assertEquals("Connecté", result.getNom());
         assertEquals("connecte@test.com", result.getEmail());
