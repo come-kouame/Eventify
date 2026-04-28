@@ -38,7 +38,7 @@ public class UtilisateurController {
     }
 
     // Modifier un utilisateur existant
-    @PutMapping
+    @PutMapping("/{id}")
     public UtilisateurDTO editUtilisateur(@PathVariable Integer id, @RequestBody UtilisateurCreateDTO dto) {
         return service.editUtilisateur(id, dto);
     }
