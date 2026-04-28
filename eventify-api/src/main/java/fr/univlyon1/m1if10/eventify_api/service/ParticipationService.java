@@ -31,7 +31,7 @@ public class ParticipationService {
 
     public void inscrireUtilisateur(Integer utilisateurId, Integer evenementId) {
 
-        if (repository.existsByUtilisateurIdAndEvenementId(evenementId, utilisateurId)) {
+        if (repository.existsByUtilisateurIdAndEvenementId(utilisateurId, evenementId)) {
             throw new RuntimeException("Déjà inscrit");
         }
 
@@ -68,7 +68,7 @@ public class ParticipationService {
                 .toList();
     }
     public List<EvenementDTO> getEvenementsByUtilisateur(int id) {
-        return repository.findByEvenementId(id).stream()
+        return repository.findByUtilisateurId(id).stream()
                 .sorted(Comparator.comparing(p -> p.getEvenement().getDate_debut()))
                 .map(p -> toDTO(p.getEvenement()))
                 .toList();
