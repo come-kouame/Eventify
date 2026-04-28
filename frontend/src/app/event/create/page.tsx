@@ -1,10 +1,11 @@
 "use client";
 
 import {Calendar} from '@/ui/calendar/calendar';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {NavBar} from "@/ui/nav-bar/nav-bar";
 import { createEvent } from "@/services/events";
+import { getMe } from "@/services/user";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -19,8 +20,15 @@ export default function Home() {
     const [endTime, setEndTime] = useState("");
     const [description, setDescription] = useState("");
     const [calendarMonth, setCalendarMonth] = useState(eventDate);
+    const [orgaId, setOrgaId] = useState<number | null>(null);
 
     const router = useRouter();
+
+    useEffect(() => {
+        getMe()
+            .then((user) => setOrgaId(user.id_orga))
+            .catch(console.error);
+    }, []);
 
     // Helper function for date/time conversion
     const buildDateTime = (baseDate: Date, time: string) => {
@@ -51,7 +59,7 @@ export default function Home() {
             nb_places: Number(seats),
             poster: "",
             nb_places_vendues: 0,
-            orga_id: 1,
+            orga_id: orgaId,
         };
 
         try {
