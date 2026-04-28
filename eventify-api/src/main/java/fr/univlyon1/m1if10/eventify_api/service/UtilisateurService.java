@@ -89,7 +89,7 @@ public class UtilisateurService {
         return toDTO(saved);
     }
 
-    public UtilisateurDTO editUtilisateur(Integer id, UtilisateurCreateDTO dto) {
+    public UtilisateurDTO editUtilisateur(Integer id, UtilisateurUpdateDTO dto) {
         Utilisateur u = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur non trouvé"));
         u.setNom(dto.getNom());
@@ -99,7 +99,6 @@ public class UtilisateurService {
         u.setVille(dto.getVille());
         u.setRue(dto.getRue());
         u.setCodePostal(dto.getCodePostal());
-        u.setMdp(passwordEncoder.encode(dto.getMdp()));
         Utilisateur updated = repository.save(u);
         return toDTO(updated);
     }

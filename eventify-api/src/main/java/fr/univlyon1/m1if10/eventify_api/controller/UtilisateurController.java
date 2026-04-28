@@ -3,6 +3,7 @@ package fr.univlyon1.m1if10.eventify_api.controller;
 import fr.univlyon1.m1if10.eventify_api.dto.ChangePasswordDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurCreateDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurDTO;
+import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurUpdateDTO;
 import fr.univlyon1.m1if10.eventify_api.entity.Utilisateur;
 import fr.univlyon1.m1if10.eventify_api.service.UtilisateurService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,7 +42,7 @@ public class UtilisateurController {
 
     // Modifier un utilisateur existant
     @PutMapping("/{id}")
-    public UtilisateurDTO editUtilisateur(@PathVariable Integer id, @RequestBody UtilisateurCreateDTO dto) {
+    public UtilisateurDTO editUtilisateur(@PathVariable Integer id, @RequestBody UtilisateurUpdateDTO dto) {
         return service.editUtilisateur(id, dto);
     }
 

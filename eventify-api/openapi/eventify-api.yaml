@@ -163,8 +163,6 @@ paths:
                   type: string
                 codePostal:
                   type: string
-                mdp:
-                  type: string
       responses:
         "200":
           description: Utilisateur modifié

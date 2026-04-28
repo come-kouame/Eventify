@@ -1,9 +1,6 @@
 package fr.univlyon1.m1if10.eventify_api;
 
-import fr.univlyon1.m1if10.eventify_api.dto.AuthResponseDTO;
-import fr.univlyon1.m1if10.eventify_api.dto.LoginDTO;
-import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurCreateDTO;
-import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurDTO;
+import fr.univlyon1.m1if10.eventify_api.dto.*;
 import fr.univlyon1.m1if10.eventify_api.entity.Administrateur;
 import fr.univlyon1.m1if10.eventify_api.entity.Organisateur;
 import fr.univlyon1.m1if10.eventify_api.entity.Utilisateur;
@@ -16,11 +13,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -158,10 +153,9 @@ public class UtilisateurServiceTest {
         RoleService roleService = Mockito.mock(RoleService.class);
         UtilisateurService service = createService(repository, orgaRepo, adminRepo, passwordEncoder, roleService);
 
-        UtilisateurCreateDTO dto = new UtilisateurCreateDTO();
+        UtilisateurUpdateDTO dto = new UtilisateurUpdateDTO();
         dto.setNom("Martin Modif");
         dto.setEmail("alice2@test.com");
-        dto.setMdp("newpassword123");
 
         Utilisateur existingUser = new Utilisateur();
         existingUser.setId(1);
@@ -188,7 +182,7 @@ public class UtilisateurServiceTest {
 
         Mockito.when(repository.findById(99)).thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, () -> service.editUtilisateur(99, new UtilisateurCreateDTO()));
+        assertThrows(ResponseStatusException.class, () -> service.editUtilisateur(99, new UtilisateurUpdateDTO()));
     }
 
     @Test
