@@ -136,6 +136,12 @@ paths:
         - Utilisateur
       summary: Modifier un utilisateur
       operationId: editUtilisateur
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       requestBody:
         required: true
         content:
@@ -162,6 +168,31 @@ paths:
       responses:
         "200":
           description: Utilisateur modifié
+
+  /utilisateurs/{id}/password:
+    put:
+      tags:
+        - Utilisateur
+      summary: Modifier le mot de passe d'un utilisateur
+      operationId: changePassword
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newPassword:
+                  type: string
+      responses:
+        "200":
+          description: Mot de passe modifié
 
   /utilisateurs/{id}/set-to-organisateur:
     put:

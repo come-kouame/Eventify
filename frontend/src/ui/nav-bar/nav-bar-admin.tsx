@@ -13,7 +13,7 @@ export const NavBarAdmin = () => {
                     <Link href="/event/manage">Gérer les évènements</Link>
                     <Link href="/profiles">Gérer les comptes</Link>
                     <Link href="/event">Mes évènements</Link>
-                    <Link href="/profiles/x">Mon Compte</Link>
+                    <Link href="/profiles/me">Mon Compte</Link>
                      <LogoutButton />
                 </div>
             </div>

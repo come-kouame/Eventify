@@ -1,9 +1,6 @@
 package fr.univlyon1.m1if10.eventify_api.service;
 
-import fr.univlyon1.m1if10.eventify_api.dto.AuthResponseDTO;
-import fr.univlyon1.m1if10.eventify_api.dto.LoginDTO;
-import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurCreateDTO;
-import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurDTO;
+import fr.univlyon1.m1if10.eventify_api.dto.*;
 import fr.univlyon1.m1if10.eventify_api.entity.Administrateur;
 import fr.univlyon1.m1if10.eventify_api.entity.Evenement;
 import fr.univlyon1.m1if10.eventify_api.entity.Organisateur;
@@ -186,6 +183,27 @@ public class UtilisateurService {
         return dto;
     }
 
+    public void changePassword(Integer id, ChangePasswordDTO dto, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+
+        if (session == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non connecté");
+        }
+
+        Integer currentUserId = (Integer) session.getAttribute("userId");
+
+        if (!currentUserId.equals(id)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Accès interdit");
+        }
+
+        Utilisateur user = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        user.setMdp(passwordEncoder.encode(dto.getNewPassword()));
+
+        repository.save(user);
+    }
+
     private UtilisateurDTO toDTO(Utilisateur u) {
         UtilisateurDTO dto = new UtilisateurDTO();
         dto.setId(u.getId());
@@ -219,10 +237,12 @@ public class UtilisateurService {
             return;
         }
 
+
         Optional<Organisateur> orgaOpt = organisateurRepository.findByUtilisateurId(id);
 
         if (orgaOpt.isPresent()) {
             Organisateur orga = orgaOpt.get();
+
 
             Administrateur admin = new Administrateur();
             admin.setUtilisateurId(id);

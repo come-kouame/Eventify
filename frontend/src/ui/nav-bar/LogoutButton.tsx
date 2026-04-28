@@ -3,7 +3,7 @@
 export function LogoutButton() {
     const handleLogout = async () => {
 
-        await fetch("http://192.168.75.28:8080/eventify/auth/logout", {
+        await fetch("https://192.168.75.28/api/eventify/auth/logout", {
             method: "POST",
             credentials: "include",
         });
