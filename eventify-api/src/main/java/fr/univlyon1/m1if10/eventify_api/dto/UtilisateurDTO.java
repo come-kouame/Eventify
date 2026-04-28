@@ -10,6 +10,8 @@ import java.time.LocalDate;
 public class UtilisateurDTO {
 
     private Integer id;
+    private Integer id_orga;
+    private Integer id_admin;
     private String nom;
     private String prenom;
     private LocalDate dateNaissance;

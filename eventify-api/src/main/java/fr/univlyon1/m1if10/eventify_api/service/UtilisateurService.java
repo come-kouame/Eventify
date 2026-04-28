@@ -6,6 +6,8 @@ import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurCreateDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurDTO;
 import fr.univlyon1.m1if10.eventify_api.entity.Evenement;
 import fr.univlyon1.m1if10.eventify_api.entity.Utilisateur;
+import fr.univlyon1.m1if10.eventify_api.repository.AdministrateurRepository;
+import fr.univlyon1.m1if10.eventify_api.repository.OrganisateurRepository;
 import fr.univlyon1.m1if10.eventify_api.repository.UtilisateurRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -20,11 +22,15 @@ import java.util.List;
 public class UtilisateurService {
 
     private final UtilisateurRepository repository;
+    private final OrganisateurRepository organisateurRepository;
+    private final AdministrateurRepository administrateurRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
 
-    public UtilisateurService(UtilisateurRepository repository, PasswordEncoder passwordEncoder, RoleService roleService) {
+    public UtilisateurService(UtilisateurRepository repository, OrganisateurRepository organisateurRepository, AdministrateurRepository administrateurRepository,PasswordEncoder passwordEncoder, RoleService roleService) {
         this.repository = repository;
+        this.organisateurRepository = organisateurRepository;
+        this.administrateurRepository = administrateurRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
     }
@@ -138,7 +144,15 @@ public class UtilisateurService {
                         "Session invalide"
                 ));
 
-        return toDTO(user);
+        UtilisateurDTO dto = toDTO(user);
+
+        organisateurRepository.findByUtilisateurId(userId)
+                .ifPresent(orga -> dto.setId_orga(orga.getId()));
+
+        administrateurRepository.findByUtilisateurId(userId)
+                .ifPresent(admin -> dto.setId_admin(admin.getId()));
+
+        return dto;
     }
 
     private UtilisateurDTO toDTO(Utilisateur u) {
