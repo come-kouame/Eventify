@@ -199,17 +199,6 @@ public class UtilisateurService {
         Utilisateur user = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        boolean match;
-        if (user.getMdp().startsWith("$2a$") || user.getMdp().startsWith("$2b$") || user.getMdp().startsWith("$2y$")) {
-            match = passwordEncoder.matches(dto.getOldPassword(), user.getMdp());
-        } else {
-            match = dto.getOldPassword().equals(user.getMdp());
-        }
-
-        if (!match) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Ancien mot de passe incorrect");
-        }
-
         user.setMdp(passwordEncoder.encode(dto.getNewPassword()));
 
         repository.save(user);
