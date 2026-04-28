@@ -5,14 +5,16 @@ import lombok.*;
 
 @Entity
 @Table(name = "messages")
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
+    @Column(nullable = false)
     private String content;
 }

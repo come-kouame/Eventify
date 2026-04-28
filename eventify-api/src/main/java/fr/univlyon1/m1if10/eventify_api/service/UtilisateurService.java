@@ -6,6 +6,8 @@ import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurCreateDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurDTO;
 import fr.univlyon1.m1if10.eventify_api.entity.Evenement;
 import fr.univlyon1.m1if10.eventify_api.entity.Utilisateur;
+import fr.univlyon1.m1if10.eventify_api.repository.AdministrateurRepository;
+import fr.univlyon1.m1if10.eventify_api.repository.OrganisateurRepository;
 import fr.univlyon1.m1if10.eventify_api.repository.UtilisateurRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -14,32 +16,59 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
 public class UtilisateurService {
 
     private final UtilisateurRepository repository;
+    private final OrganisateurRepository organisateurRepository;
+    private final AdministrateurRepository administrateurRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
 
-    public UtilisateurService(UtilisateurRepository repository, PasswordEncoder passwordEncoder, RoleService roleService) {
+    public UtilisateurService(UtilisateurRepository repository, OrganisateurRepository organisateurRepository, AdministrateurRepository administrateurRepository,PasswordEncoder passwordEncoder, RoleService roleService) {
         this.repository = repository;
+        this.organisateurRepository = organisateurRepository;
+        this.administrateurRepository = administrateurRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
     }
 
     public List<UtilisateurDTO> getAllUtilisateurs() {
         return repository.findAll().stream()
-                .map(this::toDTO)
+                .sorted(Comparator.comparing(Utilisateur::getNom))
+                .map(user -> {
+                    UtilisateurDTO dto = toDTO(user);
+
+                    organisateurRepository.findByUtilisateurId(user.getId())
+                            .ifPresent(orga -> dto.setId_orga(orga.getId()));
+
+                    administrateurRepository.findByUtilisateurId(user.getId())
+                            .ifPresent(admin -> dto.setId_admin(admin.getId()));
+
+                    return dto;
+                })
                 .toList();
     }
 
     public UtilisateurDTO getUtilisateurById(Integer id) {
         Utilisateur u = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur non trouvé " + id));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Utilisateur non trouvé " + id
+                ));
 
-        return toDTO(u);
+        UtilisateurDTO dto = toDTO(u);
+
+        organisateurRepository.findByUtilisateurId(id)
+                .ifPresent(orga -> dto.setId_orga(orga.getId()));
+
+        administrateurRepository.findByUtilisateurId(id)
+                .ifPresent(admin -> dto.setId_admin(admin.getId()));
+
+        return dto;
     }
 
     public UtilisateurDTO createUtilisateur(UtilisateurCreateDTO dto) {
@@ -81,30 +110,36 @@ public class UtilisateurService {
     }
 
     public AuthResponseDTO login(LoginDTO dto, HttpServletRequest request) {
-    System.out.println("Email recu  = " + dto.getEmail());
-    System.out.println("mdp recu = " + dto.getMdp());
 
-    Utilisateur user = repository.findByEmail(dto.getEmail())
-            .orElseThrow(() -> {
-                System.out.println("no user avec cet email");
-                return new ResponseStatusException(
-                        HttpStatus.UNAUTHORIZED,
-                        "Identifiants invalides"
-                );
-            });
+        System.out.println("DTO RECU = " + dto);
+        System.out.println("EMAIL DTO = " + dto.getEmail());
+        System.out.println("MDP DTO = " + dto.getMdp());
+        Utilisateur user = repository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> {
+                    return new ResponseStatusException(
+                            HttpStatus.UNAUTHORIZED,
+                            "Identifiants invalides");
+                });
 
-    System.out.println("User existe = " + user.getEmail());
-    System.out.println("mdp BD = " + user.getMdp());
+        System.out.println("USER TROUVE = " + user.getEmail());
+        System.out.println("MDP DB = " + user.getMdp());
 
-    if (!dto.getMdp().equals(user.getMdp())) {
-        System.out.println("Mdp incorrect");
-        throw new ResponseStatusException(
-                HttpStatus.UNAUTHORIZED,
-                "Identifiants invalides"
-        );
-          }
+        boolean match;
+        //pour les mdp hashés de la bd -kamelia-
+        if (user.getMdp().startsWith("$2a$") || user.getMdp().startsWith("$2b$") || user.getMdp().startsWith("$2y$")) {
+            match = passwordEncoder.matches(dto.getMdp(), user.getMdp());
+        } else { //j'ai remis cette ligne car notre bd contient les anciens user avec mdp non hashés -kamelia-
+            match = dto.getMdp().equals(user.getMdp());
+        }
 
-    System.out.println("MDP OK");
+        System.out.println("PASSWORD MATCH = " + match);
+
+        if (!match) {
+            System.out.println("PASSWORD INCORRECT");
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Identifiants invalides");
+        }
 
         HttpSession session = request.getSession(true);
         session.setAttribute("userId", user.getId());
@@ -113,9 +148,16 @@ public class UtilisateurService {
         AuthResponseDTO res = new AuthResponseDTO();
         res.setEmail(user.getEmail());
         return res;
-  
-}
-    public Utilisateur getCurrentUser(HttpServletRequest request) {
+    }
+
+    public void logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+    }
+
+    public UtilisateurDTO getCurrentUserDTO(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
         if (session == null) {
@@ -124,11 +166,20 @@ public class UtilisateurService {
 
         Integer userId = (Integer) session.getAttribute("userId");
 
-        return repository.findById(userId)
+        Utilisateur user = repository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.UNAUTHORIZED,
-                        "Session invalide"
-                ));
+                        "Session invalide"));
+
+        UtilisateurDTO dto = toDTO(user);
+
+        organisateurRepository.findByUtilisateurId(userId)
+                .ifPresent(orga -> dto.setId_orga(orga.getId()));
+
+        administrateurRepository.findByUtilisateurId(userId)
+                .ifPresent(admin -> dto.setId_admin(admin.getId()));
+
+        return dto;
     }
 
     private UtilisateurDTO toDTO(Utilisateur u) {

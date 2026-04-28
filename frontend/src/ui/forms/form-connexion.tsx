@@ -7,7 +7,6 @@ export function FormConnexion() {
     const [error, setError] = useState("");
 
     const handleSubmit = async (e: any) => {
-    console.log("CLICK LOGIN ");
     e.preventDefault();
 
         try {
@@ -26,7 +25,7 @@ export function FormConnexion() {
             console.log("OK:", res.ok);
 
             const text = await res.text();
-            console.log("REPONSE BACK:", text);
+            console.log("back repond:", text);
 
             if (!res.ok) {
                 throw new Error("Identifiants invalides");
