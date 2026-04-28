@@ -17,6 +17,12 @@ export type Event = {
     admin_id: number | null;
 };
 
+export type Participant = {
+    id: number;
+    nom: string;
+    prenom: string;
+};
+
 export async function getAllEvents(): Promise<Event[]> {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements`,{
         //credentials: "include",
@@ -68,6 +74,23 @@ export async function getEventByUser(id: number): Promise<Event[]> {
     const data: Event = await res.json();
     return data;
 }
+
+export async function getParticipantByEventID(id: number): Promise<Participant[]> {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements/${id}/participants`, {
+        //credentials: "include",
+    });
+
+    if (!res.ok) {
+        throw new Error(`Erreur ${res.status}`);
+    }
+
+    const data: Participant[] = await res.json();
+
+    console.log(data);
+
+    return data;
+}
+
 
 export async function registerEvent(id: number, userId: number) {
     console.log(id);

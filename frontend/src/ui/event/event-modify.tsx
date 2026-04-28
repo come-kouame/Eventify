@@ -73,9 +73,18 @@ export const EventModify = ({
 
                 {/* Bottom bar */}
                 <div className="flex text-center text-sm font-medium">
-                    <div className="w-1/3 bg-gray-300 py-3">
-                        {location}
-                    </div>
+                    {admin_id != null ? (
+                        <a
+                            href={`/event/${id}/participants`}
+                            className="w-1/3 bg-blue-300 py-3 cursor-pointer hover:bg-blue-500 hover:text-white transition block"
+                        >
+                            Liste des participants
+                        </a>
+                    ) : (
+                        <div className="w-1/3 bg-gray-300 py-3">
+                            {location}
+                        </div>
+                    )}
                     <div
                         className={`w-1/3 py-3 flex items-center justify-center text-black ${
                             new Date(date) < new Date()
