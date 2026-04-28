@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {NavBar} from "@/ui/nav-bar/nav-bar";
 import { getEventByID, valideEvent, deleteEvent } from "@/services/events";
+import { getMe } from "@/services/user";
 
 export default function Home({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -22,6 +23,8 @@ export default function Home({ params }: { params: Promise<{ id: string }> }) {
     const [description, setDescription] = useState("");
     const [posterPreview, setPosterPreview] = useState("");
     const [calendarMonth, setCalendarMonth] = useState(eventDate);
+    const [orgaId, setOrgaId] = useState<number | null>(null);
+    const [adminId, setAdminId] = useState<number | null>(null);
 
     useEffect(() => {
         const loadEvent = async () => {
@@ -41,12 +44,16 @@ export default function Home({ params }: { params: Promise<{ id: string }> }) {
                 setCalendarMonth(start);
                 setStartTime(start.toTimeString().slice(0, 5));
                 setEndTime(end.toTimeString().slice(0, 5));
+                setOrgaId(event.orga_id);
             } catch (err) {
                 console.error("Load event error:", err);
             }
         };
 
         loadEvent();
+        getMe()
+            .then((user) => setAdminId(user.id_admin))
+            .catch(console.error);
     }, [id]);
 
     // Helper function for date/time conversion
@@ -79,8 +86,8 @@ export default function Home({ params }: { params: Promise<{ id: string }> }) {
             poster: "",
             nb_places_vendues: 0,
             valide: true,
-            orga_id: 1,
-            admin_id: 1,
+            orga_id: orgaId,
+            admin_id: adminId,
         };
         try {
             console.log(JSON.stringify(eventPayload));

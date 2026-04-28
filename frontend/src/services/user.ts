@@ -80,7 +80,7 @@ export const getStatut = (user: Utilisateur) => {
 };
 
 export async function setAdmin(id: number) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/set-to-admin`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/set-to-administrateur`, {
         method: "PUT",
     });
 
@@ -89,7 +89,7 @@ export async function setAdmin(id: number) {
 }
 
 export async function setOrga(id: number) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/set-to-orga`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/set-to-organisateur`, {
         method: "PUT",
     });
 
@@ -98,10 +98,29 @@ export async function setOrga(id: number) {
 }
 
 export async function setUser(id: number) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/set-to-user`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/set-to-utilisateur`, {
         method: "PUT",
     });
 
     if (!res.ok) throw new Error("Erreur setUser");
+    return res.json();
+}
+
+export async function setPassword(id: number, password: string) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/password`, {
+        method: "PUT",
+        //credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password }),
+    });
+
+    if (!res.ok) {
+        const text = await res.text();
+        console.error("setPassword failed:", res.status, text);
+        throw new Error(`Erreur setPassword (${res.status})`);
+    }
+
     return res.json();
 }
