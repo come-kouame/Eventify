@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "evenement")
@@ -25,10 +24,10 @@ public class Evenement {
     private String description;
 
     @Column(name = "date_debut", nullable = false)
-    private LocalDate date_debut;
+    private LocalDateTime date_debut;
 
     @Column(name = "date_fin", nullable = false)
-    private LocalDate date_fin;
+    private LocalDateTime date_fin;
 
     @Column(name = "lieu", nullable = false)
     private String lieu;
