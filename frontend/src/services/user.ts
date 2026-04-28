@@ -62,38 +62,29 @@ export const getStatut = (user: Utilisateur) => {
     return "Utilisateur";
 };
 
-export async function promoteToOrga(id: number) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/promote-orga`, {
-        method: "POST",
+export async function setAdmin(id: number) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/set-to-admin`, {
+        method: "PUT",
     });
 
-    if (!res.ok) throw new Error("Erreur promoteOrga");
+    if (!res.ok) throw new Error("Erreur setAdmin");
     return res.json();
 }
 
-export async function promoteToAdmin(id: number) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/promote-admin`, {
-        method: "POST",
+export async function setOrga(id: number) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/set-to-orga`, {
+        method: "PUT",
     });
 
-    if (!res.ok) throw new Error("Erreur promoteAdmin");
+    if (!res.ok) throw new Error("Erreur setOrga");
     return res.json();
 }
 
-export async function demoteToOrga(id: number) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/demote-orga`, {
-        method: "POST",
+export async function setUser(id: number) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/set-to-user`, {
+        method: "PUT",
     });
 
-    if (!res.ok) throw new Error("Erreur demoteOrga");
-    return res.json();
-}
-
-export async function demoteToUser(id: number) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/demote-user`, {
-        method: "POST",
-    });
-
-    if (!res.ok) throw new Error("Erreur demoteUser");
+    if (!res.ok) throw new Error("Erreur setUser");
     return res.json();
 }
