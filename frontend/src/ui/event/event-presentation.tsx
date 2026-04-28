@@ -1,4 +1,5 @@
 interface Props {
+    id: number;
     title : string;
     description : string;
     date : string;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export const EventPresentation = ({
+    id,
     title,
     description,
     date,
@@ -26,6 +28,15 @@ export const EventPresentation = ({
     } else {
         priceText = "À partir de " + price.toFixed(2) + "€";
     }
+
+    const formattedDate = new Date(date).toLocaleString("fr-FR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Europe/Paris",
+    });
 
     return (
         <div className="flex w-full bg-gray-200 rounded-lg overflow-hidden shadow">
@@ -48,7 +59,7 @@ export const EventPresentation = ({
                     <div className="flex justify-between items-start">
                         <div>
                             <h2 className="text-2xl font-bold">{title}</h2>
-                            <p className="text-sm text-gray-700 ml-3">{date}</p>
+                            <p className="text-sm text-gray-700 ml-3">{formattedDate}</p>
                         </div>
                         <p className="text-sm font-semibold">{priceText}</p>
                     </div>
@@ -66,7 +77,7 @@ export const EventPresentation = ({
                     <div className="w-1/3 bg-gray-400 py-3">
                         {place_current} places restantes
                     </div>
-                    <a href="/event/x" className="w-1/3 bg-gray-300 py-3 cursor-pointer hover:bg-gray-500 hover:text-white transition block">
+                    <a href={`/event/${id}`} className="w-1/3 bg-gray-300 py-3 cursor-pointer hover:bg-gray-500 hover:text-white transition block">
                         Réserver
                     </a>
                 </div>

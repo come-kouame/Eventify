@@ -20,7 +20,7 @@ export const LigneProfile = () => {
                     <td className="p-2">{user.email}</td>
                     <td className="p-2">Utilisateur</td>
                     <td className="p-2">
-                        <a href={`/profiles/x`} className="bg-blue-500 text-white px-4 py-1 rounded">
+                        <a href={`/profiles/${user.id}`} className="bg-blue-500 text-white px-4 py-1 rounded">
                             Modifier
                         </a>
                     </td>
