@@ -106,7 +106,19 @@ export async function registerEvent(id: number, userId: number) {
     return res.status;
 }
 
-export async function createEvent(eventPayload: Partial<Event>) {
+export async function createEvent(eventPayload: {
+    titre: string;
+    description: string;
+    date_debut: string;
+    date_fin: string;
+    lieu: string;
+    adresse: string;
+    prix: number;
+    nb_places: number;
+    poster: string;
+    nb_places_vendues: number;
+    orga_id: number | null
+}) {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements`, {
         method: "POST",
         headers: {
@@ -124,7 +136,21 @@ export async function createEvent(eventPayload: Partial<Event>) {
     return await res.json();
 }
 
-export async function valideEvent(id: number, eventPayload: Partial<Event>) {
+export async function valideEvent(id: number, eventPayload: {
+    titre: string;
+    description: string;
+    date_debut: string;
+    date_fin: string;
+    lieu: string;
+    adresse: string;
+    prix: number;
+    nb_places: number;
+    poster: string;
+    nb_places_vendues: number;
+    valide: boolean;
+    orga_id: number | null;
+    admin_id: number | null
+}) {
     const updateRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/evenements/${id}`, {
         method: "PUT",
         headers: {
