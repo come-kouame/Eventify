@@ -1,6 +1,23 @@
+"use client";
+import { useState } from "react";
+import { setAdmin, setUser,setOrga } from "@/services/user";
 import Link from "next/link";
 
-export const Profile = ({ user }: { user?: any }) => {
+export const Profile = ({ user }: { user: any }) => {
+    const [selectedStatus, setSelectedStatus] = useState(
+        user?.id_admin != null ? "admin" : user?.id_orga != null ? "orga" : "user"
+    );
+
+    const handleStatusChange = (status: string) => {
+        setSelectedStatus(status);
+    };
+
+    const handleValidate = async () => {
+        if (selectedStatus === "admin") await setAdmin(user.id);
+        else if (selectedStatus === "orga") await setOrga(user.id);
+        else await setUser(user.id);
+    };
+
     return (
         <div className="px-6">
             <div className="bg-gray-200 p-6 rounded-lg">
@@ -54,20 +71,41 @@ export const Profile = ({ user }: { user?: any }) => {
                 <div className="flex items-center mt-8 text-xl space-x-6">
                     <span className="text-lg font-bold">Statut :</span>
                     <label className="flex items-center gap-2">
-                        <input type="radio" name="status" /> Administrateur
+                        <input
+                            type="radio"
+                            name="status"
+                            checked={selectedStatus === "admin"}
+                            readOnly
+                            onClick={() => handleStatusChange("admin")}
+                        />
+                        Administrateur
                     </label>
                     <label className="flex items-center gap-2">
-                        <input type="radio" name="status" /> Organisateur
+                        <input
+                            type="radio"
+                            name="status"
+                            checked={selectedStatus === "orga"}
+                            readOnly
+                            onClick={() => handleStatusChange("orga")}
+                        />
+                        Organisateur
                     </label>
                     <label className="flex items-center gap-2">
-                        <input type="radio" name="status" defaultChecked /> Participant
+                        <input
+                            type="radio"
+                            name="status"
+                            checked={selectedStatus === "user"}
+                            readOnly
+                            onClick={() => handleStatusChange("user")}
+                        />
+                        Utilisateur
                     </label>
                 </div>
 
                 {/* Buttons */}
                 <div className="flex gap-4 mt-8">
                     <Link href="/profiles" className="flex-1">
-                        <button className="w-full bg-green-400 hover:bg-green-500 text-black text-2xl py-4 rounded-lg">
+                        <button onClick={handleValidate} className="w-full bg-green-400 hover:bg-green-500 text-black text-2xl py-4 rounded-lg">
                             Valider
                         </button>
                     </Link>

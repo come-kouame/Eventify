@@ -12,6 +12,13 @@ export default function Home() {
     const [me, setMe] = useState<Utilisateur | null>(null);
     const [events, setEvents] = useState<Event[]>([]);
 
+    const [search, setSearch] = useState("");
+
+    const filteredEvents = events.filter((event) =>
+        event.titre.toLowerCase().includes(search.toLowerCase())
+    );
+
+
     useEffect(() => {
         getMe()
             .then(setMe)
@@ -28,18 +35,25 @@ export default function Home() {
             <main className="flex min-h-screen w-full px-16 sm:items-start">
                 {/* Left calendar */}
                 <div className="flex flex-col gap-4 mx-4">
+                    <input
+                        type="text"
+                        placeholder="Rechercher un évènement..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="w-full rounded-lg border border-gray-300 px-4 py-2 text-black shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
                     <Calendar
                         date={new Date()}
-                        eventsDates={events.map((e) => new Date(e.date_debut))}
+                        eventsDates={filteredEvents.map((e) => new Date(e.date_debut))}
                     />
                     <Calendar
                         date={new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1)}
-                        eventsDates={events.map((e) => new Date(e.date_debut))}
+                        eventsDates={filteredEvents.map((e) => new Date(e.date_debut))}
                     />
                 </div>
 
                 {/* Event */}
-                <BlocEvenements data={events}/>
+                <BlocEvenements data={filteredEvents}/>
             </main>
             <Hello/>
             {me && (

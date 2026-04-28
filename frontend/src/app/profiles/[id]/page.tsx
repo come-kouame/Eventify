@@ -2,7 +2,7 @@ import { getUserByID } from "@/services/user";
 import { Profile } from "@/ui/profile/profile";
 import {NavBar} from "@/ui/nav-bar/nav-bar"
 
-export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+export default async function Page({ params }: { params: { id: string } }) {
     const { id } = await params;
 
     const user = await getUserByID(Number(id));

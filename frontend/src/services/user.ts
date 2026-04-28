@@ -1,5 +1,7 @@
 export type Utilisateur = {
     id: number;
+    id_orga: number | null;
+    id_admin: number | null;
     nom: string;
     prenom: string;
     dateNaissance: string;
@@ -52,4 +54,37 @@ export async function getUserByID(id: number): Promise<Utilisateur> {
     console.log(data);
 
     return data;
+}
+
+export const getStatut = (user: Utilisateur) => {
+    if (user.id_admin != null) return "Administrateur";
+    if (user.id_orga != null) return "Organisateur";
+    return "Utilisateur";
+};
+
+export async function setAdmin(id: number) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/set-to-admin`, {
+        method: "PUT",
+    });
+
+    if (!res.ok) throw new Error("Erreur setAdmin");
+    return res.json();
+}
+
+export async function setOrga(id: number) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/set-to-orga`, {
+        method: "PUT",
+    });
+
+    if (!res.ok) throw new Error("Erreur setOrga");
+    return res.json();
+}
+
+export async function setUser(id: number) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utilisateurs/${id}/set-to-user`, {
+        method: "PUT",
+    });
+
+    if (!res.ok) throw new Error("Erreur setUser");
+    return res.json();
 }
