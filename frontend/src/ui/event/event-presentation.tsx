@@ -40,21 +40,9 @@ export const EventPresentation = ({
 
     return (
         <div className="flex w-full bg-gray-200 rounded-lg overflow-hidden shadow">
-            {/* Image */}
-            <div className="w-1/6 bg-gray-300 flex items-center justify-center">
-                <div className="w-full aspect-[210/297] overflow-hidden">
-                    {image ? (
-                        <img src={image} alt="event" className="object-cover w-full h-full" />
-                    ) : (
-                        <div className="flex items-center justify-center w-full h-full">
-                            <p className="text-xl font-bold">Poster</p>
-                        </div>
-                    )}
-                </div>
-            </div>
 
             {/* Content */}
-            <div className="w-5/6 flex flex-col justify-between">
+            <div className="w-full flex flex-col justify-between">
                 <div className="p-4">
                     <div className="flex justify-between items-start">
                         <div>

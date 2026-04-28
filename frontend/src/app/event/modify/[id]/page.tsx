@@ -20,7 +20,6 @@ export default function Home({ params }: { params: Promise<{ id: string }> }) {
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
     const [description, setDescription] = useState("");
-    const [posterFile, setPosterFile] = useState<File | null>(null);
     const [posterPreview, setPosterPreview] = useState("");
     const [calendarMonth, setCalendarMonth] = useState(eventDate);
 
@@ -77,7 +76,7 @@ export default function Home({ params }: { params: Promise<{ id: string }> }) {
             adresse: "",
             prix: Number(price),
             nb_places: Number(seats),
-            poster: posterPreview,
+            poster: "",
             nb_places_vendues: 0,
             valide: true,
             orga_id: 1,
@@ -177,21 +176,6 @@ export default function Home({ params }: { params: Promise<{ id: string }> }) {
                 <div className="flex-1 flex flex-col gap-6">
                     {/* Description with poster */}
                     <div className="bg-zinc-200 flex-1 flex rounded-lg p-6 gap-6">
-                        <div className="w-1/4 flex flex-col gap-2">
-                            <img src={posterPreview || "/poster-example.jpg"} alt="Poster" className="w-full h-auto rounded-lg bg-zinc-300" />
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => {
-                                    const file = e.target.files?.[0];
-                                    if (file) {
-                                        setPosterFile(file);
-                                        setPosterPreview(URL.createObjectURL(file));
-                                    }
-                                }}
-                                className="text-sm text-center bg-white border border-zinc-300 rounded-md px-2 py-1 outline-none focus:ring-2 focus:ring-indigo-400"
-                            />
-                        </div>
                         <textarea
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
