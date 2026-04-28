@@ -7,11 +7,10 @@ export function FormConnexion() {
     const [error, setError] = useState("");
 
     const handleSubmit = async (e: any) => {
-    console.log("CLICK LOGIN ");
     e.preventDefault();
 
         try {
-            const res = await fetch("http://localhost:8080/auth/login", {
+            const res = await fetch("http://192.168.75.28:8080/eventify/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -27,7 +26,7 @@ export function FormConnexion() {
             console.log("OK:", res.ok);
 
             const text = await res.text();
-            console.log("REPONSE BACK:", text);
+            console.log("back repond:", text);
 
             if (!res.ok) {
                 throw new Error("Identifiants invalides");
@@ -36,7 +35,7 @@ export function FormConnexion() {
             const data = JSON.parse(text);
             console.log("Connexion réussie :", data);
 
-            window.location.href = "/";
+            window.location.href = "/event";
         } catch (err) {
             setError("Email ou mot de passe incorrect");
         }
