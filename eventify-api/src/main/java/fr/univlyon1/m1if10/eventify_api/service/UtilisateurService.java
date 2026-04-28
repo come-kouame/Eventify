@@ -6,6 +6,8 @@ import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurCreateDTO;
 import fr.univlyon1.m1if10.eventify_api.dto.UtilisateurDTO;
 import fr.univlyon1.m1if10.eventify_api.entity.Evenement;
 import fr.univlyon1.m1if10.eventify_api.entity.Utilisateur;
+import fr.univlyon1.m1if10.eventify_api.repository.AdministrateurRepository;
+import fr.univlyon1.m1if10.eventify_api.repository.OrganisateurRepository;
 import fr.univlyon1.m1if10.eventify_api.repository.UtilisateurRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -21,12 +23,15 @@ import java.util.List;
 public class UtilisateurService {
 
     private final UtilisateurRepository repository;
+    private final OrganisateurRepository organisateurRepository;
+    private final AdministrateurRepository administrateurRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
 
-    public UtilisateurService(UtilisateurRepository repository, PasswordEncoder passwordEncoder,
-            RoleService roleService) {
+    public UtilisateurService(UtilisateurRepository repository, OrganisateurRepository organisateurRepository, AdministrateurRepository administrateurRepository,PasswordEncoder passwordEncoder, RoleService roleService) {
         this.repository = repository;
+        this.organisateurRepository = organisateurRepository;
+        this.administrateurRepository = administrateurRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
     }
@@ -34,15 +39,36 @@ public class UtilisateurService {
     public List<UtilisateurDTO> getAllUtilisateurs() {
         return repository.findAll().stream()
                 .sorted(Comparator.comparing(Utilisateur::getNom))
-                .map(this::toDTO)
+                .map(user -> {
+                    UtilisateurDTO dto = toDTO(user);
+
+                    organisateurRepository.findByUtilisateurId(user.getId())
+                            .ifPresent(orga -> dto.setId_orga(orga.getId()));
+
+                    administrateurRepository.findByUtilisateurId(user.getId())
+                            .ifPresent(admin -> dto.setId_admin(admin.getId()));
+
+                    return dto;
+                })
                 .toList();
     }
 
     public UtilisateurDTO getUtilisateurById(Integer id) {
         Utilisateur u = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur non trouvé " + id));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Utilisateur non trouvé " + id
+                ));
 
-        return toDTO(u);
+        UtilisateurDTO dto = toDTO(u);
+
+        organisateurRepository.findByUtilisateurId(id)
+                .ifPresent(orga -> dto.setId_orga(orga.getId()));
+
+        administrateurRepository.findByUtilisateurId(id)
+                .ifPresent(admin -> dto.setId_admin(admin.getId()));
+
+        return dto;
     }
 
     public UtilisateurDTO createUtilisateur(UtilisateurCreateDTO dto) {
@@ -145,7 +171,15 @@ public class UtilisateurService {
                         HttpStatus.UNAUTHORIZED,
                         "Session invalide"));
 
-        return toDTO(user);
+        UtilisateurDTO dto = toDTO(user);
+
+        organisateurRepository.findByUtilisateurId(userId)
+                .ifPresent(orga -> dto.setId_orga(orga.getId()));
+
+        administrateurRepository.findByUtilisateurId(userId)
+                .ifPresent(admin -> dto.setId_admin(admin.getId()));
+
+        return dto;
     }
 
     private UtilisateurDTO toDTO(Utilisateur u) {
