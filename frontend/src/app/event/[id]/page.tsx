@@ -51,8 +51,6 @@ export default function EventPage({params,}: {
                 <div className="w-1/4 bg-zinc-200 p-6 flex flex-col items-center justify-start text-center rounded-lg gap-6">
                     <Calendar
                         date={eventDate}
-                        startDate={null}
-                        endDate={null}
                         onSelectDate={() => {}}
                         currentEventDate={eventDate}
                         className="w-full"
