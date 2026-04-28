@@ -136,6 +136,12 @@ paths:
         - Utilisateur
       summary: Modifier un utilisateur
       operationId: editUtilisateur
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       requestBody:
         required: true
         content:
